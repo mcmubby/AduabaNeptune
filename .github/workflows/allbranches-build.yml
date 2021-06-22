@@ -1,0 +1,28 @@
+name: Build and Publish Customer Portal
+
+on:
+  push:
+    branches: *
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v2
+
+      - name: 'Setup .Net Environment'
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.202
+
+      - name: 'Project Dependencies'
+        shell: pwsh
+        run: |
+          dotnet restore
+
+      - name: 'Build project'
+        shell: pwsh
+        run: |
+          dotnet build -c Debug
