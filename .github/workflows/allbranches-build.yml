@@ -2,7 +2,7 @@ name: Build and Publish Customer Portal
 
 on:
   push:
-    branches: *
+    branches: "*"
 
 jobs:
   build:
