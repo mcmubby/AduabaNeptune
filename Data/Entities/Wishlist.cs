@@ -6,7 +6,7 @@ namespace AduabaNeptune.Data.Entities
     public class WishList
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 

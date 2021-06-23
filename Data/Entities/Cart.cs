@@ -6,7 +6,7 @@ namespace AduabaNeptune.Data.Entities
     public class Cart
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public virtual Customer Customer { get; set; }
 

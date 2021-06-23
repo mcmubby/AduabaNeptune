@@ -7,7 +7,7 @@ namespace AduabaNeptune.Data.Entities
     public class Product
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -23,9 +23,7 @@ namespace AduabaNeptune.Data.Entities
         [Required]
         public int CategoryId { get; set; }
 
-        public virtual SubCategory SubCategory { get; set; }
-
-        public int SubCategoryId { get; set; }
+        public string SubCategory { get; set; }
 
         public virtual Vendor Vendor { get; set; }
 

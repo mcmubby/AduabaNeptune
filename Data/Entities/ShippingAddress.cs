@@ -6,7 +6,7 @@ namespace AduabaNeptune.Data.Entities
     public class ShippingAddress
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string ContactPersonsName { get; set; }

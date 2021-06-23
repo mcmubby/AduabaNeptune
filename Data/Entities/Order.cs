@@ -7,7 +7,7 @@ namespace AduabaNeptune.Data.Entities
     public class Order
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string OrderNumber { get; set; }

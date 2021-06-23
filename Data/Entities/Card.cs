@@ -6,7 +6,7 @@ namespace AduabaNeptune.Data.Entities
     public class Card
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string CardHolderName { get; set; }
