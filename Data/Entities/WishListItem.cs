@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AduabaNeptune.Data.Entities
 {
-    public class CartItem
+    public class WishListItem
     {
         [Key]
         public int Id { get; set; }
@@ -12,16 +12,9 @@ namespace AduabaNeptune.Data.Entities
         [Required]
         public int ProductId { get; set; }
 
-        [Required]
-        public int Quantity { get; set; }
-
-        public virtual Cart Cart { get; set; }
+        public virtual WishList WishList { get; set; }
 
         [Required]
-        public int CartId { get; set; }
-
-        public virtual Order Order { get; set; }
-
-        public int OrderId { get; set; }
+        public int WishListId { get; set; }
     }
 }
