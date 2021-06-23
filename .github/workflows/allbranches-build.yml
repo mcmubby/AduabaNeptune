@@ -1,7 +1,7 @@
 name: Build and Publish Customer Portal
 
 on:
-  push:
+  pull_request:
     branches: "*"
 
 jobs:
