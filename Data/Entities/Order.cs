@@ -25,13 +25,13 @@ namespace AduabaNeptune.Data.Entities
 
         public virtual ShippingAddress ShippingAddress { get; set; }
 
-        [Required]
-        public int ShippingAddressId { get; set; }
+        
+        public string ShippingAddressId { get; set; }
 
         public virtual BillingAddress BillingAddress { get; set; }
 
-        [Required]
-        public int BillingAddressId { get; set; }
+        
+        public string BillingAddressId { get; set; }
 
         public virtual Customer Customer { get; set; }
         

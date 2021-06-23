@@ -14,7 +14,7 @@ namespace AduabaNeptune.Data.Entities
         public virtual Category Category { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
+        public string CategoryId { get; set; }
 
 
         public virtual IEnumerable<Product> Product { get; set; }
