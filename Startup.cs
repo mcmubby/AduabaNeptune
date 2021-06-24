@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AduabaNeptune.Data;
+using AduabaNeptune.Helper;
+using AduabaNeptune.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace AduabaNeptune
@@ -40,6 +45,33 @@ namespace AduabaNeptune
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AduabaDatabase"));
             });
+
+            services.Configure<JWT>(Configuration.GetSection("JWT"));
+
+            services.AddHttpContextAccessor();
+
+            services.AddAuthentication(Options => 
+            {
+
+                Options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                Options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(bearerOptions => 
+            {
+                bearerOptions.SaveToken = true;
+                bearerOptions.RequireHttpsMetadata = true;
+                bearerOptions.TokenValidationParameters = new TokenValidationParameters() { 
+                    //ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    //ValidAudience =Configuration["JWT:ValidAudience"],
+                    ValidateIssuer = false,
+                    ValidateAudience=false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JWT:Secret"]))
+                };
+            });
+
+            //DI
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
