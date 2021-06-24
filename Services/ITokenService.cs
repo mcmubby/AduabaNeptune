@@ -1,4 +1,4 @@
-using AduabaNeptune.Model;
+using AduabaNeptune.Data.Entities;
 
 namespace AduabaNeptune.Services
 {

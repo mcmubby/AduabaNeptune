@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AduabaNeptune.Helper;
-using AduabaNeptune.Model;
+using AduabaNeptune.Data.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,10 +29,12 @@ namespace AduabaNeptune.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("Id", customer.Id.ToString()),
-                    new Claim("Email", customer.Email)
+                    new Claim(CustomClaimType.Id.ToString(), customer.Id.ToString()),
+                    new Claim(CustomClaimType.Email.ToString(), customer.Email),
+                    new Claim(CustomClaimType.Lastname.ToString(), customer.LastName),
+                    new Claim(CustomClaimType.Firstname.ToString(), customer.FirstName)
                 }),
-                Expires = DateTime.UtcNow.AddHours(4),
+                Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 
             };

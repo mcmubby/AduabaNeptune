@@ -1,11 +1,12 @@
+using System.Security.Claims;
 using AduabaNeptune.Dto;
 
 namespace AduabaNeptune.Services
 {
     public interface IAccountService
     {
-        void RegisterCustomer(RegistrationRequest model);
-        void SignInCustomer(SignInRequest model);
-        void UpdateCustomerDetail(UpdateCustomerRequest model);
+        bool RegisterCustomer(RegistrationRequest model);
+        string SignInCustomer(SignInRequest model);
+        string UpdateCustomerDetail(UpdateCustomerRequest model, Claim customerClaim);
     }
 }
