@@ -81,7 +81,7 @@ namespace AduabaNeptune.Controllers
                 }
                 else
                 {
-                    return Ok(new { message = "Customer details successfully updated", newToken = response });
+                    return Ok(new { message = "Customer details successfully updated", token = response });
                 }
             }
             else
