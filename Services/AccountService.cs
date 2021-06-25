@@ -5,7 +5,6 @@ using AduabaNeptune.Data;
 using AduabaNeptune.Dto;
 using AduabaNeptune.Data.Entities;
 using BCryptNet = BCrypt.Net.BCrypt;
-using Microsoft.AspNetCore.Http;
 
 namespace AduabaNeptune.Services
 {
