@@ -4,7 +4,6 @@ using System.Linq;
 using AduabaNeptune.Data;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
-using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace AduabaNeptune.Services
 {
@@ -18,37 +17,64 @@ namespace AduabaNeptune.Services
         }
 
 
-        public void DeleteCreditCard(List<Card> cards)
+        public void DeleteCreditCard(List<string> cardIds, int customerId)
         {
-            throw new System.NotImplementedException();
+            List<Card> cardsToDelete = new List<Card>();
+            cardsToDelete = _context.Cards.Where(c => c.CustomerId == customerId && cardIds.Contains(c.Id)).ToList();
+
+            if (cardsToDelete.Count != 0)
+            {
+                _context.Cards.RemoveRange(cardsToDelete);
+                _context.SaveChanges();
+            }
         }
 
 
-        public List<Card> GetAllCreditCards()
+        public List<Card> GetAllCustomerCreditCards(int customerId)
         {
-            throw new System.NotImplementedException();
-        }
-        
+            List<Card> availableCards = new List<Card>();
+            availableCards = _context.Cards.Where(c => c.CustomerId == customerId).ToList();
 
-        public void SaveCreditCard(SaveCardRequest card, string customerId)
+            if (availableCards.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                for (int i = 0; i < availableCards.Count; i++)
+                {
+                    availableCards[i].CardNumber = DecryptString(availableCards[i].CardNumber);
+                }
+                return availableCards;
+            }
+            
+            
+        }
+
+
+        public bool SaveCreditCard(SaveCardRequest card, int customerId)
         {
             //Check if card already exist using card number
             //Encrypt card number to use for search along with user id
-            //Id is being parsed to int because it was converted to string in claims during token generation
-            var actualCustomerId = int.Parse(customerId);
             var encryptedCardNumber = EnryptString(card.CardNumber);
 
-            var existingCard = _context.Cards.FirstOrDefault(c => c.CustomerId == actualCustomerId && c.CardNumber == encryptedCardNumber);
+            var existingCard = _context.Cards.FirstOrDefault(c => c.CustomerId == customerId && c.CardNumber == encryptedCardNumber);
 
-            if(existingCard != null){}
+            if(existingCard != null){return false;}
 
             var creditCard = new Card
             {
                 CardHolderName = card.CardHolderName,
                 CardNumber = encryptedCardNumber,
                 CCV = card.CCV,
-                ExpiryDate = card.ExpiryDate
+                ExpiryDate = card.ExpiryDate,
+                CustomerId = customerId,
+                Id = Guid.NewGuid().ToString()
             };
+
+            _context.Cards.Add(creditCard);
+            _context.SaveChanges();
+            return true;
         }
 
 

@@ -1,20 +1,13 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace AduabaNeptune.Dto
 {
-    public class SaveCardRequest
+    public class GetCustomerCardResponse
     {
-        [Required]
         public string CardHolderName { get; set; }
-
-        [Required]
         public string CardNumber { get; set; }
-
-        [Required]
         public DateTime ExpiryDate { get; set; }
-
-        [Required]
         public int CCV { get; set; }
+        public string CardId { get; set; }
     }
 }

@@ -25,13 +25,13 @@ namespace AduabaNeptune.Helper
             }
         }
 
-        public static string CheckClaimForCustomerId(ClaimsPrincipal requesterIdentity)
+        public static int CheckClaimForCustomerId(ClaimsPrincipal requesterIdentity)
         {
             var hasClaim = requesterIdentity.HasClaim(c => c.Type == CustomClaimType.Id.ToString());
 
             if(!hasClaim)
             {
-                return null;
+                return 0;
             }
             else
             {
@@ -39,11 +39,15 @@ namespace AduabaNeptune.Helper
 
                 if(string.IsNullOrWhiteSpace(idClaim.Value))
                 {
-                    return null;
+                    return 0;
                 }
 
+                if (int.TryParse(idClaim.Value, out int result))
+                {
+                    return result;
+                }
                 
-                return idClaim.Value;
+                return 0;
             }
         }
     }

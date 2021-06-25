@@ -6,8 +6,8 @@ namespace AduabaNeptune.Services
 {
     public interface ICardService
     {
-        void SaveCreditCard(SaveCardRequest card, string CustomerId);
-        List<Card> GetAllCreditCards();
-        void DeleteCreditCard(List<Card> cards);
+        bool SaveCreditCard(SaveCardRequest card, int CustomerId);
+        List<Card> GetAllCustomerCreditCards(int customerId);
+        void DeleteCreditCard(List<string> cardIds, int customerId);
     }
 }

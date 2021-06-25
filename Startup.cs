@@ -72,6 +72,7 @@ namespace AduabaNeptune
             //DI
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICardService, CardService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
