@@ -7,7 +7,7 @@ namespace AduabaNeptune.Services
     public interface ICategoryService
     {
         List<Category> GetAllCategories();
-        void AddCategory(AddCategoryRequest addCategoryRequest);
+        bool AddCategory(AddCategoryRequest addCategoryRequest);
         void DeleteCategory(List<string> categoryIds);
         bool EditCategory(EditCategoryRequest editCategoryRequest);
     }

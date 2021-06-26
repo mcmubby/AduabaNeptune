@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AduabaNeptune.Data;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace AduabaNeptune.Services
 {
@@ -15,15 +18,37 @@ namespace AduabaNeptune.Services
             _context = context;
         }
 
-        public void AddCategory(AddCategoryRequest addCategoryRequest)
+        public bool AddCategory(AddCategoryRequest addCategoryRequest)
         {
-            throw new System.NotImplementedException();
+            var existingCategory = _context.Categories.FirstOrDefault(c => c.CategoryName == addCategoryRequest.CategoryName);
+
+            if(existingCategory != null){return false;}
+
+            var newCategory = new Category
+            {
+                Id = Guid.NewGuid().ToString(),
+                CategoryName = addCategoryRequest.CategoryName
+            };
+
+            _context.Categories.Add(newCategory);
+            _context.SaveChanges();
+            return true;
         }
+
 
         public void DeleteCategory(List<string> categoryIds)
         {
-            throw new System.NotImplementedException();
+            List<Category> categoriesToDelete = new List<Category>();
+
+            categoriesToDelete = _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToList();
+
+            if (categoriesToDelete.Count != 0)
+            {
+                _context.Categories.RemoveRange(categoriesToDelete);
+                _context.SaveChanges();
+            }
         }
+
 
         public bool EditCategory(EditCategoryRequest editCategoryRequest)
         {
@@ -38,8 +63,8 @@ namespace AduabaNeptune.Services
 
         public List<Category> GetAllCategories()
         {
-            var response = _context.Categories.ToList();
-            
+            var response = _context.Categories.Include(c => c.SubCategories).ToList();
+        
             return response;
         }
     }
