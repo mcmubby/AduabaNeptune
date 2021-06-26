@@ -27,5 +27,6 @@ namespace AduabaNeptune.Data
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<WishList> WishLists { get; set; }
         public DbSet<WishListItem> WishListItems { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }

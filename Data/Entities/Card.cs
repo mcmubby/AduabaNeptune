@@ -19,7 +19,7 @@ namespace AduabaNeptune.Data.Entities
 
         [Required]
         [MaxLength(3)]
-        public int CCV { get; set; }
+        public string CCV { get; set; }
 
         public virtual Customer Customer { get; set; }
 

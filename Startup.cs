@@ -78,7 +78,7 @@ namespace AduabaNeptune
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
             if (env.IsDevelopment())
             {
@@ -99,6 +99,10 @@ namespace AduabaNeptune
             {
                 endpoints.MapControllers();
             });
+
+            CreateDefaults.MigrateDatabaseContext(svp);
+            CreateDefaults.CreateDefaultAdmin(svp);
+            CreateDefaults.CreateDefaultVendor(svp);
         }
     }
 }
