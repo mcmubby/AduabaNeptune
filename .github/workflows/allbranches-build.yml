@@ -1,4 +1,4 @@
-name: Build and Publish Customer Portal
+name: Check for Successful Build
 
 on:
   pull_request:
