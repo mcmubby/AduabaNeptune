@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AduabaNeptune.Controllers
 {
+    [ApiController]
+    [Route("Category")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

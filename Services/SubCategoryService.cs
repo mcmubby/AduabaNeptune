@@ -64,7 +64,7 @@ namespace AduabaNeptune.Services
 
         public List<SubCategory> GetAllSubCategories()
         {
-            var response = _context.SubCategories.Include(s => s.Category.CategoryName).ToList();
+            var response = _context.SubCategories.ToList();
             return response;
         }
     }

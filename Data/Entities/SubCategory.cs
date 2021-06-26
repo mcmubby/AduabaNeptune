@@ -11,8 +11,6 @@ namespace AduabaNeptune.Data.Entities
         [Required]
         public string Name { get; set; }
 
-        public virtual Category Category { get; set; }
-
         [Required]
         public string CategoryId { get; set; }
 
