@@ -15,6 +15,6 @@ namespace AduabaNeptune.Dto
         public DateTime ExpiryDate { get; set; }
 
         [Required]
-        public int CCV { get; set; }
+        public string CCV { get; set; }
     }
 }

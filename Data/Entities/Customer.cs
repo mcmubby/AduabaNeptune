@@ -8,11 +8,7 @@ namespace AduabaNeptune.Data.Entities
     {
         [Key]
         public int Id { get; set; }
-        // public virtual ShippingAddress ShippingAddress { get; set; }
-        // public int ShippingAddressId { get; set; }
-        // public virtual BillingAddress BillingAddress { get; set; }
-        // public int BillingAddressId { get; set; }
-
+        
         [Required]
         public string Email { get; set; }
 

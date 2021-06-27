@@ -43,7 +43,9 @@ namespace AduabaNeptune.Services
             {
                 for (int i = 0; i < availableCards.Count; i++)
                 {
-                    availableCards[i].CardNumber = DecryptString(availableCards[i].CardNumber);
+                    availableCards[i].CardNumber = Decrypt(availableCards[i].CardNumber);
+                    availableCards[i].CCV = Decrypt(availableCards[i].CCV);
+
                 }
                 return availableCards;
             }
@@ -56,7 +58,7 @@ namespace AduabaNeptune.Services
         {
             //Check if card already exist using card number
             //Encrypt card number to use for search along with user id
-            var encryptedCardNumber = EnryptString(card.CardNumber);
+            var encryptedCardNumber = Encrypt(card.CardNumber);
 
             var existingCard = _context.Cards.FirstOrDefault(c => c.CustomerId == customerId && c.CardNumber == encryptedCardNumber);
 
@@ -66,7 +68,7 @@ namespace AduabaNeptune.Services
             {
                 CardHolderName = card.CardHolderName,
                 CardNumber = encryptedCardNumber,
-                CCV = card.CCV,
+                CCV = Encrypt(card.CCV),
                 ExpiryDate = card.ExpiryDate,
                 CustomerId = customerId,
                 Id = Guid.NewGuid().ToString()
@@ -78,7 +80,7 @@ namespace AduabaNeptune.Services
         }
 
 
-        public static string DecryptString(string value)
+        public static string Decrypt(string value)
         {
             byte[] b;
             string decrypted;
@@ -94,7 +96,7 @@ namespace AduabaNeptune.Services
             return decrypted;
         }
 
-        public  static string EnryptString(string value)
+        public  static string Encrypt(string value)
         {
             byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(value);
             string encrypted = Convert.ToBase64String(b);
