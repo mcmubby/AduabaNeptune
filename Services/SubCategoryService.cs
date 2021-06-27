@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AduabaNeptune.Data;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
@@ -16,11 +17,11 @@ namespace AduabaNeptune.Services
             _context = context;
         }
 
-        public bool AddSubCategory(AddSubCategoryRequest addSubCategoryModel)
+        public async Task<SubCategory> AddSubCategoryAsync(AddSubCategoryRequest addSubCategoryModel)
         {
-            var existingSubCategory = _context.SubCategories.FirstOrDefault(c => c.Name == addSubCategoryModel.SubCategoryName);
+            var existingSubCategory = await _context.SubCategories.FirstOrDefaultAsync(c => c.Name == addSubCategoryModel.SubCategoryName);
 
-            if(existingSubCategory != null){return false;}
+            if(existingSubCategory != null){return null;}
 
             var newSubCategory = new SubCategory
             {
@@ -28,44 +29,49 @@ namespace AduabaNeptune.Services
                 CategoryId = addSubCategoryModel.CategoryId
             };
 
-            _context.SubCategories.Add(newSubCategory);
-            _context.SaveChanges();
-            return true;
+            await _context.SubCategories.AddAsync(newSubCategory);
+            await _context.SaveChangesAsync();
+            return newSubCategory;
         }
 
-        public void DeleteSubCategory(List<int> subCategoryIds)
+        public async Task DeleteSubCategoryAsync(List<int> subCategoryIds)
         {
             List<SubCategory> subCategoriesToDelete = new List<SubCategory>();
 
-            subCategoriesToDelete = _context.SubCategories.Where(c => subCategoryIds.Contains(c.Id)).ToList();
+            subCategoriesToDelete = await _context.SubCategories.Where(c => subCategoryIds.Contains(c.Id)).ToListAsync();
 
             if (subCategoriesToDelete.Count != 0)
             {
                 _context.SubCategories.RemoveRange(subCategoriesToDelete);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public bool EditSubCategory(EditSubCategoryRequest editSubCategoryModel)
+        public async Task<bool> EditSubCategoryAsync(EditSubCategoryRequest editSubCategoryModel)
         {
-            var oldSubCategory = _context.SubCategories.FirstOrDefault(c =>  c.Id == editSubCategoryModel.Id);
+            var oldSubCategory = await _context.SubCategories.FirstOrDefaultAsync(c =>  c.Id == editSubCategoryModel.Id);
 
             if(oldSubCategory == null){return false;} //SubCategory not found
 
-            var newCategory = _context.Categories.FirstOrDefault(c => c.Id == editSubCategoryModel.CategoryId);
+            var categoryExist = await _context.Categories.FirstOrDefaultAsync(c => c.Id == editSubCategoryModel.CategoryId); //checks if a category exist with the provided category id
 
-            if(newCategory == null){return false;} //new Category not found
+            if(categoryExist == null){return false;} //new Category not found
 
             oldSubCategory.Name = editSubCategoryModel.NewSubCategoryName;
             oldSubCategory.CategoryId =editSubCategoryModel.CategoryId;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public List<SubCategory> GetAllSubCategories()
+        public async Task<List<SubCategory>> GetAllSubCategoriesAsync()
         {
-            var response = _context.SubCategories.ToList();
+            var response = await _context.SubCategories.ToListAsync();
             return response;
+        }
+
+        public async Task<SubCategory> GetAllSubCategoryByIdAsync(int subCategoryId)
+        {
+            return await _context.SubCategories.FirstOrDefaultAsync(s => s.Id == subCategoryId);
         }
     }
 }

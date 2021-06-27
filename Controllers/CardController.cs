@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
 using AduabaNeptune.Helper;
@@ -21,7 +22,7 @@ namespace AduabaNeptune.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCustomerCards()
+        public async Task<IActionResult> GetCustomerCards()
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
 
@@ -31,29 +32,22 @@ namespace AduabaNeptune.Controllers
             }
 
             List<Card> customerCards = new List<Card>();
-            customerCards = _cardService.GetAllCustomerCreditCards(requesterIdentity);
+            customerCards = await _cardService.GetAllCustomerCreditCardsAsync(requesterIdentity);
 
             if (customerCards == null){return NoContent();}
 
             var cards = new List<GetCustomerCardResponse>();
             foreach (var card in customerCards)
             {
-                cards.Add(new GetCustomerCardResponse
-                {
-                    CardId = card.Id,
-                    CardHolderName = card.CardHolderName,
-                    CardNumber = card.CardNumber,
-                    ExpiryDate = card.ExpiryDate,
-                    CCV = card.CCV
-                });
+                cards.Add(card.AsCardResponseDto());
             }
 
             return Ok(cards);
         }
 
 
-        [HttpPost]
-        public IActionResult AddCard([FromBody]SaveCardRequest saveCardRequest)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCustomerCardById(string id)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
 
@@ -62,14 +56,32 @@ namespace AduabaNeptune.Controllers
                 return Unauthorized();
             }
 
-            var response = _cardService.SaveCreditCard(saveCardRequest, requesterIdentity);
+            var customerCard = await _cardService.GetCustomerCreditCardByIdAsync(id);
 
-            return Ok();
+            if (customerCard == null){return NotFound();}
+
+            return Ok(customerCard.AsCardResponseDto());
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddCard([FromBody]SaveCardRequest saveCardRequest)
+        {
+            var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
+
+            if (requesterIdentity == 0)
+            {
+                return Unauthorized();
+            }
+
+            var response = await _cardService.SaveCreditCardAsync(saveCardRequest, requesterIdentity);
+
+            return CreatedAtAction(nameof(GetCustomerCardById), new{id = response.Id}, response.AsCardResponseDto());
         }
 
 
         [HttpDelete]
-        public IActionResult DeleteCard([FromBody]List<string> cardIds)
+        public async Task<IActionResult> DeleteCard([FromBody]List<string> cardIds)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
 
@@ -80,8 +92,8 @@ namespace AduabaNeptune.Controllers
 
             if(cardIds.Count == 0){return BadRequest(new {message = "No card Id in request"});}
 
-            _cardService.DeleteCreditCard(cardIds, requesterIdentity);
-            return Ok();
+            await _cardService.DeleteCreditCardAsync(cardIds, requesterIdentity);
+            return NoContent();
         }
     }
 }

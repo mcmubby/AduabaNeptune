@@ -1,12 +1,12 @@
-using System.Security.Claims;
+using System.Threading.Tasks;
 using AduabaNeptune.Dto;
 
 namespace AduabaNeptune.Services
 {
     public interface IAccountService
     {
-        bool RegisterCustomer(RegistrationRequest model);
-        string SignInCustomer(SignInRequest model);
-        string UpdateCustomerDetail(UpdateCustomerRequest model, Claim customerClaim);
+        Task<bool> RegisterCustomerAsync(RegistrationRequest model);
+        Task<string> SignInCustomerAsync(SignInRequest model);
+        Task<string> UpdateCustomerDetailAsync(UpdateCustomerRequest model, string customerEmail);
     }
 }

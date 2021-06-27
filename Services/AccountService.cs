@@ -1,10 +1,10 @@
-using System.Security.Claims;
 using System;
-using System.Linq;
 using AduabaNeptune.Data;
 using AduabaNeptune.Dto;
 using AduabaNeptune.Data.Entities;
 using BCryptNet = BCrypt.Net.BCrypt;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace AduabaNeptune.Services
 {
@@ -19,10 +19,10 @@ namespace AduabaNeptune.Services
             _tokenService = tokenService;
         }
 
-        public bool RegisterCustomer(RegistrationRequest model)
+        public async Task<bool> RegisterCustomerAsync(RegistrationRequest model)
         {
             //Check if the email is already registered
-            var alreadyRegistered = _context.Customers.Any(c => c.Email == model.Email);
+            var alreadyRegistered = await _context.Customers.AnyAsync(c => c.Email == model.Email);
 
             if (alreadyRegistered)
             {
@@ -39,15 +39,15 @@ namespace AduabaNeptune.Services
                     DateCreated = DateTime.UtcNow
                 };
 
-                _context.Customers.Add(newCustomer);
-                _context.SaveChanges();
+                await _context.Customers.AddAsync(newCustomer);
+                await _context.SaveChangesAsync();
                 return true;
             }
         }
 
-        public string SignInCustomer(SignInRequest model)
+        public async Task<string> SignInCustomerAsync(SignInRequest model)
         {
-            var existingCustomer = _context.Customers.FirstOrDefault(c => c.Email == model.Email);
+            var existingCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Email == model.Email);
 
             if (existingCustomer == null || !BCryptNet.Verify(model.Password, existingCustomer.Password))
             {
@@ -60,17 +60,12 @@ namespace AduabaNeptune.Services
             }
         }
 
-        public string UpdateCustomerDetail(UpdateCustomerRequest model, Claim customerClaim )
+        public async Task<string> UpdateCustomerDetailAsync(UpdateCustomerRequest model, string customerEmail )
         {
-            //Verify that Customer claim is not empty so ef doesn't throw error while searching
-            if (string.IsNullOrEmpty(customerClaim.Value))
-            {
-                return null;
-            }
+            
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Email == customerEmail);
 
-            var customer = _context.Customers.FirstOrDefault(c => c.Email == customerClaim.Value);
-
-            if (customer == null)
+            if (customer is null)
             {
                 return null;
             }
@@ -82,7 +77,7 @@ namespace AduabaNeptune.Services
                 customer.LastModified = DateTime.UtcNow;
 
                 _context.Customers.Update(customer);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 //Generate new token
                 var token = _tokenService.GenerateToken(customer);

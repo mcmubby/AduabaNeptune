@@ -18,11 +18,11 @@ namespace AduabaNeptune.Services
             _context = context;
         }
 
-        public bool AddCategory(AddCategoryRequest addCategoryRequest)
+        public async Task<Category> AddCategoryAsync(AddCategoryRequest addCategoryRequest)
         {
-            var existingCategory = _context.Categories.FirstOrDefault(c => c.CategoryName == addCategoryRequest.CategoryName);
+            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryName == addCategoryRequest.CategoryName);
 
-            if(existingCategory != null){return false;}
+            if(existingCategory != null){return null;}
 
             var newCategory = new Category
             {
@@ -30,42 +30,47 @@ namespace AduabaNeptune.Services
                 CategoryName = addCategoryRequest.CategoryName
             };
 
-            _context.Categories.Add(newCategory);
-            _context.SaveChanges();
-            return true;
+            await _context.Categories.AddAsync(newCategory);
+            await _context.SaveChangesAsync();
+            return newCategory;
         }
 
 
-        public void DeleteCategory(List<string> categoryIds)
+        public async Task DeleteCategoryAsync(List<string> categoryIds)
         {
             List<Category> categoriesToDelete = new List<Category>();
 
-            categoriesToDelete = _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToList();
+            categoriesToDelete = await _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
 
             if (categoriesToDelete.Count != 0)
             {
                 _context.Categories.RemoveRange(categoriesToDelete);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
 
-        public bool EditCategory(EditCategoryRequest editCategoryRequest)
+        public async Task<bool> EditCategoryAsync(EditCategoryRequest editCategoryRequest)
         {
-            var oldCategory = _context.Categories.FirstOrDefault(c =>  c.Id == editCategoryRequest.Id);
+            var oldCategory = await _context.Categories.FirstOrDefaultAsync(c =>  c.Id == editCategoryRequest.Id);
 
             if(oldCategory == null){return false;} //Category not found
 
             oldCategory.CategoryName = editCategoryRequest.NewCategoryName;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public List<Category> GetAllCategories()
+        public async Task<List<Category>> GetAllCategoriesAsync()
         {
-            var response = _context.Categories.Include(s => s.SubCategories).ToList();
+            var response = await _context.Categories.Include(s => s.SubCategories).ToListAsync();
         
             return response;
+        }
+
+        public async Task<Category> GetCategoryByIdAsync(string categoryId)
+        {
+            return await _context.Categories.Where(c => c.Id == categoryId).FirstOrDefaultAsync();
         }
     }
 }

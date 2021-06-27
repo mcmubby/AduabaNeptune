@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AduabaNeptune.Data;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace AduabaNeptune.Services
 {
@@ -17,23 +19,23 @@ namespace AduabaNeptune.Services
         }
 
 
-        public void DeleteCreditCard(List<string> cardIds, int customerId)
+        public async Task DeleteCreditCardAsync(List<string> cardIds, int customerId)
         {
             List<Card> cardsToDelete = new List<Card>();
-            cardsToDelete = _context.Cards.Where(c => c.CustomerId == customerId && cardIds.Contains(c.Id)).ToList();
+            cardsToDelete = await _context.Cards.Where(c => c.CustomerId == customerId && cardIds.Contains(c.Id)).ToListAsync();
 
             if (cardsToDelete.Count != 0)
             {
                 _context.Cards.RemoveRange(cardsToDelete);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
 
-        public List<Card> GetAllCustomerCreditCards(int customerId)
+        public async Task<List<Card>> GetAllCustomerCreditCardsAsync(int customerId)
         {
             List<Card> availableCards = new List<Card>();
-            availableCards = _context.Cards.Where(c => c.CustomerId == customerId).ToList();
+            availableCards = await _context.Cards.Where(c => c.CustomerId == customerId).ToListAsync();
 
             if (availableCards.Count == 0)
             {
@@ -49,20 +51,37 @@ namespace AduabaNeptune.Services
                 }
                 return availableCards;
             }
-            
-            
         }
 
 
-        public bool SaveCreditCard(SaveCardRequest card, int customerId)
+        public async Task<Card> GetCustomerCreditCardByIdAsync(string cardId)
+        {
+            var card = await _context.Cards.FirstOrDefaultAsync(c => c.Id == cardId);
+
+            if (card is null)
+            {
+                return null;
+            }
+            else
+            {
+
+                card.CardNumber = Decrypt(card.CardNumber);
+                card.CCV = Decrypt(card.CCV);
+
+                return card;
+            }
+        }
+
+
+        public async Task<Card> SaveCreditCardAsync(SaveCardRequest card, int customerId)
         {
             //Check if card already exist using card number
             //Encrypt card number to use for search along with user id
             var encryptedCardNumber = Encrypt(card.CardNumber);
 
-            var existingCard = _context.Cards.FirstOrDefault(c => c.CustomerId == customerId && c.CardNumber == encryptedCardNumber);
+            var existingCard = await _context.Cards.FirstOrDefaultAsync(c => c.CustomerId == customerId && c.CardNumber == encryptedCardNumber);
 
-            if(existingCard != null){return false;}
+            if(existingCard != null){return existingCard;}
 
             var creditCard = new Card
             {
@@ -74,10 +93,12 @@ namespace AduabaNeptune.Services
                 Id = Guid.NewGuid().ToString()
             };
 
-            _context.Cards.Add(creditCard);
-            _context.SaveChanges();
-            return true;
+            await _context.Cards.AddAsync(creditCard);
+            await _context.SaveChangesAsync();
+            return creditCard;
         }
+
+
 
 
         public static string Decrypt(string value)
