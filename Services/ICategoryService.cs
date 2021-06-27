@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
 
@@ -6,9 +7,10 @@ namespace AduabaNeptune.Services
 {
     public interface ICategoryService
     {
-        List<Category> GetAllCategories();
-        bool AddCategory(AddCategoryRequest addCategoryRequest);
-        void DeleteCategory(List<string> categoryIds);
-        bool EditCategory(EditCategoryRequest editCategoryRequest);
+        Task<List<Category>> GetAllCategoriesAsync();
+        Task<Category> GetCategoryByIdAsync(string categoryId);
+        Task<Category> AddCategoryAsync(AddCategoryRequest addCategoryRequest);
+        Task DeleteCategoryAsync(List<string> categoryIds);
+        Task<bool> EditCategoryAsync(EditCategoryRequest editCategoryRequest);
     }
 }

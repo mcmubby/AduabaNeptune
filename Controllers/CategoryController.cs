@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
 using AduabaNeptune.Helper;
@@ -20,19 +21,30 @@ namespace AduabaNeptune.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCategories()
+        public async Task<IActionResult> GetAllCategories()
         {
 
             List<Category> categories = new List<Category>();
-            categories = _categoryService.GetAllCategories();
+            categories = await _categoryService.GetAllCategoriesAsync();
 
             return Ok(categories);
         }
 
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategoryById(string id)
+        {
+
+            var category = await _categoryService.GetCategoryByIdAsync(id);
+            if(category is null){return NotFound();}
+
+            return Ok(category);
+        }
+
+
         [Authorize]
         [HttpPost]
-        public IActionResult AddCategory([FromBody]AddCategoryRequest model)
+        public async Task<IActionResult> AddCategory([FromBody]AddCategoryRequest model)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);//Change to admin //Only using this to test
 
@@ -41,15 +53,15 @@ namespace AduabaNeptune.Controllers
                 return Unauthorized();
             }
 
-            var response = _categoryService.AddCategory(model);
+            var response = await _categoryService.AddCategoryAsync(model);
 
-            return Ok();
+            return CreatedAtAction(nameof(GetCategoryById), new{id = response.Id}, response);
         }
 
 
         [Authorize]
         [HttpDelete]
-        public IActionResult DeleteCategory([FromBody]List<string> categoryIds)
+        public async Task<IActionResult> DeleteCategory([FromBody]List<string> categoryIds)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);//Change to admin //Only using this to test
 
@@ -60,14 +72,14 @@ namespace AduabaNeptune.Controllers
 
             if(categoryIds.Count == 0){return BadRequest(new {message = "No category Id in request"});}
 
-            _categoryService.DeleteCategory(categoryIds);
-            return Ok();
+            await _categoryService.DeleteCategoryAsync(categoryIds);
+            return NoContent();
         }
 
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditCategory([FromBody]EditCategoryRequest model)
+        public async Task<IActionResult> EditCategory([FromBody]EditCategoryRequest model)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User); //Change to admin //Only using this to test
 
@@ -76,11 +88,11 @@ namespace AduabaNeptune.Controllers
                 return Unauthorized();
             }
 
-            var response =_categoryService.EditCategory(model);
+            var response = await _categoryService.EditCategoryAsync(model);
 
             if(!response){return BadRequest(new {message = "Category to be edited not found"});}
 
-            return Ok();
+            return NoContent();
         }
     }
 }

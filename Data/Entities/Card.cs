@@ -18,7 +18,6 @@ namespace AduabaNeptune.Data.Entities
         public DateTime ExpiryDate { get; set; }
 
         [Required]
-        [MaxLength(3)]
         public string CCV { get; set; }
 
         public virtual Customer Customer { get; set; }

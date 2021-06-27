@@ -47,7 +47,7 @@ namespace AduabaNeptune
         public static void CreateDefaultVendor(IServiceProvider svp)
         {
             var vendorEmail = "admin@abuaba.com";
-            //var vendorPassword = "adminPassword";
+            var vendorPassword = "adminPassword";
 
             var dbContext = svp.GetRequiredService<ApplicationDbContext>();
             var vendor = dbContext.Vendors.Where(e => e.Email == vendorEmail).FirstOrDefault();
@@ -57,7 +57,7 @@ namespace AduabaNeptune
                 vendor = new Vendor
                 {
                     Email = vendorEmail,
-                    //Password = vendorPassword,
+                    Password = vendorPassword,
                     ShopName = "Aduaba",
                     VendorName = "Aduaba Admin",
                     DateJoined = DateTime.UtcNow,

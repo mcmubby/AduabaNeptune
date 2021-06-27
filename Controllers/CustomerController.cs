@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AduabaNeptune.Dto;
 using AduabaNeptune.Helper;
 using AduabaNeptune.Services;
@@ -18,14 +19,9 @@ namespace AduabaNeptune.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody]RegistrationRequest model)
+        public async Task<IActionResult> Register([FromBody]RegistrationRequest model)
         {
-            if (model == null)
-            {
-                return BadRequest(new {message = "Request model is empty or incomplete"});
-            }
-
-            var response = _accountService.RegisterCustomer(model);
+            var response = await _accountService.RegisterCustomerAsync(model);
 
             if (response == false)
             {
@@ -39,14 +35,9 @@ namespace AduabaNeptune.Controllers
 
 
         [HttpPost("signin")]
-        public IActionResult SignIn([FromBody]SignInRequest model)
+        public async Task<IActionResult> SignIn([FromBody]SignInRequest model)
         {
-            if (model == null)
-            {
-                return BadRequest(new {message = "Request model is empty or incomplete"});
-            }
-
-            var response = _accountService.SignInCustomer(model);
+            var response = await _accountService.SignInCustomerAsync(model);
 
             if (response == null)
             {
@@ -61,19 +52,14 @@ namespace AduabaNeptune.Controllers
 
         [Authorize]
         [HttpPut("update")]
-        public IActionResult UpdateDetails(UpdateCustomerRequest model)
+        public async Task<IActionResult> UpdateDetails(UpdateCustomerRequest model)
         {
-            if (model == null)
-            {
-                return BadRequest(new {message = "Request model is empty or incomplete"});
-            }
 
-            var requesterIdentity = HttpContext.User;
+            var requesterIdentity = ClaimsProcessor.CheckClaimForEmail(HttpContext.User);
 
-            if (requesterIdentity.HasClaim(c => c.Type == CustomClaimType.Email.ToString()))
+            if (requesterIdentity != null)
             {
-                var requesterClaim = requesterIdentity.FindFirst(c => c.Type == CustomClaimType.Email.ToString());
-                var response = _accountService.UpdateCustomerDetail(model, requesterClaim);
+                var response = await _accountService.UpdateCustomerDetailAsync(model, requesterIdentity);
 
                 if (string.IsNullOrEmpty(response))
                 {
