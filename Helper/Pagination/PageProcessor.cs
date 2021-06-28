@@ -5,9 +5,9 @@ using AduabaNeptune.Services;
 
 namespace AduabaNeptune.Helper.Pagination
 {
-    public class PageProcessor
+    public static class PageProcessor
     {
-        public static PagedResponse<List<T>> CreatePagedReponse<T>(List<T> pagedData, Filter validFilter, int totalRecords, IUriService uriService, string route)
+        public static PagedResponse<List<T>> CreatePagedReponse<T>(this List<T> pagedData, Filter validFilter, int totalRecords, IUriService uriService, string route)
         {
             var response = new PagedResponse<List<T>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
 
