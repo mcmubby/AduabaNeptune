@@ -28,8 +28,5 @@ namespace AduabaNeptune.Data.Entities
 
         public string Role { get; set; } = "Vendor";
 
-
-        public virtual IEnumerable<Product> Products { get; set; }
-
     }
 }

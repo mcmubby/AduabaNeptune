@@ -18,17 +18,15 @@ namespace AduabaNeptune.Data.Entities
         [Required]
         public double Price { get; set; }
 
-        public virtual Category Category { get; set; }
-
         [Required]
-        public string CategoryId { get; set; }
+        public int Quantity { get; set; }
 
-        public string SubCategory { get; set; }
+        public virtual Category Category { get; set; }
+        //public string CategoryId { get; set; }
 
         public virtual Vendor Vendor { get; set; }
 
-        [Required]
-        public int VendorId { get; set; }
+        //public int VendorId { get; set; }
 
         [Required]
         public DateTime DateAdded { get; set; }
@@ -36,7 +34,7 @@ namespace AduabaNeptune.Data.Entities
         public string ImageUrl { get; set; }
 
 
-        public virtual IEnumerable<CartItem> CartItems { get; set; }
-        public virtual IEnumerable<WishListItem> WishListItems { get; set; }
+        // public virtual IEnumerable<CartItem> CartItems { get; set; }
+        // public virtual IEnumerable<WishListItem> WishListItems { get; set; }
     }
 }
