@@ -59,7 +59,7 @@ namespace AduabaNeptune.Controllers
             var customerCard = await _cardService.GetCustomerCreditCardByIdAsync(id);
 
             if (customerCard == null){return NotFound();}
-
+            
             return Ok(customerCard.AsCardResponseDto());
         }
 

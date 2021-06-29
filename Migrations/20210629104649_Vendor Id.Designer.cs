@@ -4,14 +4,16 @@ using AduabaNeptune.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AduabaNeptune.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210629104649_Vendor Id")]
+    partial class VendorId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -666,7 +668,7 @@ namespace AduabaNeptune.Migrations
                         .HasForeignKey("SubCategoryId");
 
                     b.HasOne("AduabaNeptune.Data.Entities.Vendor", "Vendor")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("VendorId");
 
                     b.Navigation("Category");
@@ -771,6 +773,11 @@ namespace AduabaNeptune.Migrations
             modelBuilder.Entity("AduabaNeptune.Data.Entities.SubCategory", b =>
                 {
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("AduabaNeptune.Data.Entities.Vendor", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishList", b =>

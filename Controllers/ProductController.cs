@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using AduabaNeptune.Helper.Pagination;
+using AduabaNeptune.Helper;
 using AduabaNeptune.Services;
 using Microsoft.AspNetCore.Mvc;
 

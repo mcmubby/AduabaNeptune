@@ -1,5 +1,5 @@
 using System;
-using AduabaNeptune.Helper.Pagination;
+using AduabaNeptune.Helper;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace AduabaNeptune.Services

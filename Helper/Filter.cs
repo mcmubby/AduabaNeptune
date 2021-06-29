@@ -1,4 +1,4 @@
-namespace AduabaNeptune.Helper.Pagination
+namespace AduabaNeptune.Helper
 {
     public class Filter
     {

@@ -1,5 +1,5 @@
 using System;
-using AduabaNeptune.Helper.Pagination;
+using AduabaNeptune.Helper;
 
 namespace AduabaNeptune.Services
 {

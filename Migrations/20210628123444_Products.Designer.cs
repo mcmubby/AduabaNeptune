@@ -4,14 +4,16 @@ using AduabaNeptune.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AduabaNeptune.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210628123444_Products")]
+    partial class Products
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -366,7 +368,7 @@ namespace AduabaNeptune.Migrations
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VendorId")
+                    b.Property<int>("VendorId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -666,8 +668,10 @@ namespace AduabaNeptune.Migrations
                         .HasForeignKey("SubCategoryId");
 
                     b.HasOne("AduabaNeptune.Data.Entities.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorId");
+                        .WithMany("Products")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
@@ -771,6 +775,11 @@ namespace AduabaNeptune.Migrations
             modelBuilder.Entity("AduabaNeptune.Data.Entities.SubCategory", b =>
                 {
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("AduabaNeptune.Data.Entities.Vendor", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishList", b =>

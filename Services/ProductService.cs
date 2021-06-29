@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AduabaNeptune.Data;
 using AduabaNeptune.Data.Entities;
 using AduabaNeptune.Dto;
-using AduabaNeptune.Helper.Pagination;
+using AduabaNeptune.Helper;
 using Microsoft.EntityFrameworkCore;
 
 namespace AduabaNeptune.Services
@@ -30,43 +30,64 @@ namespace AduabaNeptune.Services
             return true;
         }
 
-        public async Task<List<Product>> GetAllProductsAsync(Filter filter)
+        public async Task<List<GetProductResponse>> GetAllProductsAsync(Filter filter)
         {
-            var pagedProduct = await _context.Products.Where(p => p.Quantity != 0)
-                                                      .Skip((filter.PageNumber - 1) * filter.PageSize)
-                                                      .Take(filter.PageSize)
+            var response = new List<GetProductResponse>();
+            var products = await _context.Products.Where(p => p.Quantity != 0).Include(v => v.Vendor)
+                                                  .Include(c => c.Category)
+                                                  .OrderBy(p => p.DateAdded)
+                                                  .Skip((filter.PageNumber - 1) * filter.PageSize)
+                                                  .Take(filter.PageSize)
                                                       .ToListAsync();
-
-            return pagedProduct;
+            foreach (var product in products)
+            {
+                response.Add(product.AsProductResponseDto());                
+            }
+            return response;
         }
 
-        public async Task<Product> GetProductByIdAsync(string productId)
+        public async Task<GetProductResponse> GetProductByIdAsync(string productId)
         {
             var product = await _context.Products.Where(p => p.Id == productId
-                                                             && p.Quantity != 0)
+                                                             && p.Quantity != 0).Include(v => v.Vendor)
+                                                 .Include(c => c.Category)
                                                  .FirstOrDefaultAsync();
-            return product;
+            return product.AsProductResponseDto();
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(string categoryId, Filter filter)
+        public async Task<IEnumerable<GetProductResponse>> GetProductsByCategoryAsync(string categoryId, Filter filter)//There might be an error here the cat Id selector in the linq
         {
-            var products = await _context.Products.Where(p => p.CategoryId == categoryId
-                                                              && p.Quantity != 0)
+            var response = new List<GetProductResponse>();
+            var products = await _context.Products.Where(p => p.Category.Id == categoryId
+                                                              && p.Quantity != 0).Include(v => v.Vendor)
+                                                  .Include(c => c.Category)
+                                                  .OrderBy(p => p.DateAdded)
                                                   .Skip((filter.PageNumber - 1) * filter.PageSize)
                                                   .Take(filter.PageSize)
                                                   .ToListAsync();
-            return products;
+            foreach (var product in products)
+            {
+                response.Add(product.AsProductResponseDto());                
+            }
+            return response;
         }
 
-        public async Task<IEnumerable<Product>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter)
+        public async Task<IEnumerable<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter)
         {
+            var response = new List<GetProductResponse>();
             var products = await _context.Products.Where(p => p.Description.Contains(searchKeyWord)
                                                               || p.Name.Contains(searchKeyWord)
-                                                              && p.Quantity != 0)
+                                                              && p.Quantity != 0).Include(v => v.Vendor)
+                                                  .Include(c => c.Category)
+                                                  .OrderBy(p => p.DateAdded)
                                                   .Skip((filter.PageNumber - 1) * filter.PageSize)
                                                   .Take(filter.PageSize)
                                                   .ToListAsync();
-            return products;
+            foreach (var product in products)
+            {
+                response.Add(product.AsProductResponseDto());                
+            }
+            return response;
         }
 
         public async Task<int> GetTotalRecords()
