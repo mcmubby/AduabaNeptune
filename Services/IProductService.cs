@@ -9,8 +9,8 @@ namespace AduabaNeptune.Services
     {
         Task<List<GetProductResponse>> GetAllProductsAsync(Filter filter);
         Task<GetProductResponse> GetProductByIdAsync(string productId);
-        Task<IEnumerable<GetProductResponse>> GetProductsByCategoryAsync(string categoryId, Filter filter);
-        Task<IEnumerable<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter);
+        Task<List<GetProductResponse>> GetProductsByCategoryAsync(string categoryId, Filter filter);
+        Task<List<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter);
         Task<bool> EditProductQuantityAsync(EditProductQuantityRequest editProductQuantity);
         Task<int> GetTotalRecords();
     }

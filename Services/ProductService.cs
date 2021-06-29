@@ -55,7 +55,7 @@ namespace AduabaNeptune.Services
             return product.AsProductResponseDto();
         }
 
-        public async Task<IEnumerable<GetProductResponse>> GetProductsByCategoryAsync(string categoryId, Filter filter)//There might be an error here the cat Id selector in the linq
+        public async Task<List<GetProductResponse>> GetProductsByCategoryAsync(string categoryId, Filter filter)//There might be an error here the cat Id selector in the linq
         {
             var response = new List<GetProductResponse>();
             var products = await _context.Products.Where(p => p.Category.Id == categoryId
@@ -72,7 +72,7 @@ namespace AduabaNeptune.Services
             return response;
         }
 
-        public async Task<IEnumerable<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter)
+        public async Task<List<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter)
         {
             var response = new List<GetProductResponse>();
             var products = await _context.Products.Where(p => p.Description.Contains(searchKeyWord)
