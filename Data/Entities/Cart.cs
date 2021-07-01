@@ -10,6 +10,8 @@ namespace AduabaNeptune.Data.Entities
 
         public virtual Customer Customer { get; set; }
 
-        public virtual IEnumerable<CartItem> CartItems { get; set; }
+        public int CustomerId { get; set; }
+
+        public virtual List<CartItem> CartItems { get; set; }
     }
 }

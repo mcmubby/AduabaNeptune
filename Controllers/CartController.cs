@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using AduabaNeptune.Dto;
 using AduabaNeptune.Helper;
 using AduabaNeptune.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +35,7 @@ namespace AduabaNeptune.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddItemToCart([FromBody]string productId)
+        public async Task<IActionResult> AddItemToCart([FromBody]AddCartItemRequest addCartItem)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
 
@@ -43,8 +44,11 @@ namespace AduabaNeptune.Controllers
                 return Unauthorized();
             }
 
-            var response = await _cartService.GetAllCartItemsAsync(requesterIdentity);
-            return Ok(response);
+            var response = await _cartService.AddItemToCartAsync(addCartItem.ProductId, requesterIdentity);
+
+            if(!response){return BadRequest();}
+            
+            return Ok();
         }
     }
 }

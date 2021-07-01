@@ -12,7 +12,7 @@ namespace AduabaNeptune.Services
         //Edit cartitem quantity
         //Get all items in cart
 
-        Task AddItemToCartAsync(string productId, int customerId);
+        Task<bool> AddItemToCartAsync(string productId, int customerId);
         Task RemoveItemFromCartAsync(string cartItemId);
         Task<CartItem> EditItemQuantityAsync(EditCartItemRequest cartItemEdit);
         Task<List<CartItem>> GetAllCartItemsAsync(int customerId);

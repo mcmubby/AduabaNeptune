@@ -18,46 +18,65 @@ namespace AduabaNeptune.Services
             _context = context;
         }
 
-        public async Task AddItemToCartAsync(string productId, int customerId)
+        public async Task<bool> AddItemToCartAsync(string productId, int customerId)
         {
-            //Check if user has existing cart if not creat one
-            var existingCart = await _context.Carts.Where(c => c.Customer.Id == customerId).FirstOrDefaultAsync();
+            //Check product validity
+            var productExist = await _context.Products.Where(p => p.Id == productId)
+                                                      .FirstOrDefaultAsync();
+
+            if(productExist is null){return false;}
+
+            //Check if user has existing cart if not create one
+            var existingCart = await _context.Carts.Where(c => c.Customer.Id == customerId)
+                                                   .Include(cI => cI.CartItems)
+                                                   .FirstOrDefaultAsync();
 
             if(existingCart is null)
             {
                 var cart = new Cart();
-                cart.Customer.Id = customerId;
+                cart.CustomerId = customerId;
                 cart.Id = Guid.NewGuid().ToString();
+                _context.Carts.Add(cart);
 
                 var cartItem = new CartItem();
                 cartItem.Id = Guid.NewGuid().ToString();
-                cartItem.Cart.Id =cart.Id;
+                cartItem.CartId =cart.Id;
                 cartItem.Quantity = 1;
-                cartItem.Product.Id = productId;
+                cartItem.ProductId = productId;
                 cartItem.CartItemStatus = CartItemStatus.InCart.ToString();
 
-                await _context.CartItems.AddAsync(cartItem);
+                _context.CartItems.Add(cartItem);
+
+                await _context.SaveChangesAsync();
+                return true;
             }
 
             //Check if the product already exist in cart.
             //if it exist increase the quantity by 1
-            var existingCartItem = await _context.CartItems.Where(p => p.Product.Id == productId)
-                                                           .FirstOrDefaultAsync();
+            CartItem sameItemAlreadyInCart = null;
+            if(existingCart.CartItems != null)
+            {
+                sameItemAlreadyInCart = existingCart.CartItems.Where(p => p.ProductId == productId && p.CartItemStatus == CartItemStatus.InCart.ToString())
+                                                             .FirstOrDefault();
+            }
 
-            if(existingCartItem is null)
+            if(sameItemAlreadyInCart is null)
             {
                 var cartItem = new CartItem();
                 cartItem.Id = Guid.NewGuid().ToString();
-                cartItem.Cart.Id =existingCart.Id;
+                cartItem.CartId =existingCart.Id;
                 cartItem.Quantity = 1;
-                cartItem.Product.Id = productId;
+                cartItem.ProductId = productId;
                 cartItem.CartItemStatus = CartItemStatus.InCart.ToString();
 
-                await _context.CartItems.AddAsync(cartItem);
+                _context.CartItems.Add(cartItem);
+                await _context.SaveChangesAsync();
+                return true;
             }
 
-            existingCartItem.Quantity += 1;
+            sameItemAlreadyInCart.Quantity += 1;
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<CartItem> EditItemQuantityAsync(EditCartItemRequest cartItemEdit)
@@ -80,16 +99,16 @@ namespace AduabaNeptune.Services
         public async Task<List<CartItem>> GetAllCartItemsAsync(int customerId)
         {
             var cart =  await _context.Carts.Where(c => c.Customer.Id == customerId)
-                                            .Include(cI => cI.CartItems).Select(cIs => cIs.CartItems)
-                                            .ToListAsync();
+                .Include(p => p.CartItems)
+                .ThenInclude(i => i.Product)
+                .Select(cIs => cIs.CartItems)
+                .FirstOrDefaultAsync();
 
             var response = new List<CartItem>();
 
-            var enumerableOfCartItems = cart[0];
+            if(cart is null){return null;}
 
-            if(enumerableOfCartItems is null){return null;}
-
-            foreach (var item in enumerableOfCartItems)
+            foreach (var item in cart)
             {
                 if(item.CartItemStatus == CartItemStatus.InCart.ToString())
                 {
