@@ -46,9 +46,43 @@ namespace AduabaNeptune.Controllers
 
             var response = await _cartService.AddItemToCartAsync(addCartItem.ProductId, requesterIdentity);
 
-            if(!response){return BadRequest();}
-            
-            return Ok();
+            if(response is null){return BadRequest(new {message = "Product could not be added to cart"});}
+
+            return Ok(response);
+        }
+
+
+        [HttpPatch]
+        public async Task<IActionResult> EditItemQuantity([FromBody]EditCartItemRequest editCartItem)
+        {
+            var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
+
+            if (requesterIdentity == 0)
+            {
+                return Unauthorized();
+            }
+
+            var response = await _cartService.EditItemQuantityAsync(editCartItem);
+
+            if(response is null){return BadRequest(new {message = "Product quantity could not be changed"});}
+
+            return Ok(response);
+        }
+
+
+        [HttpDelete("{cartItemId}")]
+        public async Task<IActionResult> DeleteItemFromCart(string cartItemId)
+        {
+            var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
+
+            if (requesterIdentity == 0)
+            {
+                return Unauthorized();
+            }
+
+            await _cartService.RemoveItemFromCartAsync(cartItemId);
+
+            return NoContent();
         }
     }
 }
