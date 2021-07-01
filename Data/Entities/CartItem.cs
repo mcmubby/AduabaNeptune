@@ -9,7 +9,6 @@ namespace AduabaNeptune.Data.Entities
 
         public virtual Product Product { get; set; }
 
-        [Required]
         public string ProductId { get; set; }
 
         [Required]
@@ -17,11 +16,12 @@ namespace AduabaNeptune.Data.Entities
 
         public virtual Cart Cart { get; set; }
 
-        [Required]
         public string CartId { get; set; }
 
         public virtual Order Order { get; set; }
 
         public string OrderId { get; set; }
+
+        public string CartItemStatus { get; set; }
     }
 }

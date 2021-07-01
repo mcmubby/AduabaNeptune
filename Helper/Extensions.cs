@@ -49,6 +49,23 @@ namespace AduabaNeptune.Helper
         }
 
 
+        public static CartItemResponse AsCartResponseDto(this CartItem cartItem)
+        {
+            return new CartItemResponse
+            {
+                CartItemId = cartItem.Id,
+                ProductId = cartItem.ProductId,
+                ProductName = cartItem.Product.Name,
+                ProductDescription = cartItem.Product.Description,
+                ProductUnitPrice = cartItem.Product.Price,
+                TotalQuantityAvailable = cartItem.Product.Quantity,
+                QuantityOfProductInCart = cartItem.Quantity,
+                ProductImage = cartItem.Product.ImageUrl,
+                CartId = cartItem.CartId
+            };
+        }
+
+
         public static PagedResponse<List<T>> CreatePagedReponse<T>(this List<T> pagedData, Filter validFilter, int totalRecords, IUriService uriService, string route)
         {
             var response = new PagedResponse<List<T>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
