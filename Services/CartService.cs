@@ -83,13 +83,15 @@ namespace AduabaNeptune.Services
         public async Task<CartItemResponse> EditItemQuantityAsync(EditCartItemRequest cartItemEdit)
         {
             //Find the cart item and change its quantity
-            var cartItem = await _context.CartItems.Where(c => c.Id == cartItemEdit.CartItemId).FirstOrDefaultAsync();
+            var cartItem = await _context.CartItems.Where(c => c.Id == cartItemEdit.CartItemId)
+                .Include(p => p.Product)
+                .FirstOrDefaultAsync();
 
             if(cartItem is null){return null;}
 
             var quantityAvailableAfterEdit = cartItem.Product.Quantity - cartItemEdit.Quantity;
 
-            if(quantityAvailableAfterEdit < 1){return null;}
+            if(quantityAvailableAfterEdit < 0){return null;}
 
             cartItem.Quantity = cartItemEdit.Quantity;
 
@@ -124,7 +126,8 @@ namespace AduabaNeptune.Services
             var item = await _context.CartItems.Where(i => i.Id == cartItemId)
                                                .FirstOrDefaultAsync();
 
-            if(item != null){
+            if(item != null)
+            {
                 _context.CartItems.Remove(item);
                 await _context.SaveChangesAsync();
             }

@@ -52,6 +52,8 @@ namespace AduabaNeptune.Services
                                                              && p.Quantity != 0).Include(v => v.Vendor)
                                                  .Include(c => c.Category)
                                                  .FirstOrDefaultAsync();
+
+            if(product is null){return null;}
             return product.AsProductResponseDto();
         }
 
