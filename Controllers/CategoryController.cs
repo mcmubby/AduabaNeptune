@@ -93,6 +93,7 @@ namespace AduabaNeptune.Controllers
             if(!response){return BadRequest(new {message = "Category to be edited not found"});}
 
             return NoContent();
+
         }
     }
 }
