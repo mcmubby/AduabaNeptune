@@ -19,7 +19,7 @@ namespace AduabaNeptune.Services
         }
 
 
-        public async Task DeleteCreditCardAsync(List<string> cardIds, int customerId)
+        public async Task DeleteCreditCardAsync(List<int> cardIds, int customerId)
         {
             List<Card> cardsToDelete = new List<Card>();
             cardsToDelete = await _context.Cards.Where(c => c.CustomerId == customerId && cardIds.Contains(c.Id)).ToListAsync();
@@ -46,7 +46,7 @@ namespace AduabaNeptune.Services
                 for (int i = 0; i < availableCards.Count; i++)
                 {
                     availableCards[i].CardNumber = Decrypt(availableCards[i].CardNumber);
-                    availableCards[i].CCV = Decrypt(availableCards[i].CCV);
+                    availableCards[i].CVV = Decrypt(availableCards[i].CVV);
 
                 }
                 return availableCards;
@@ -54,7 +54,7 @@ namespace AduabaNeptune.Services
         }
 
 
-        public async Task<Card> GetCustomerCreditCardByIdAsync(string cardId)
+        public async Task<Card> GetCustomerCreditCardByIdAsync(int cardId)
         {
             var card = await _context.Cards.FirstOrDefaultAsync(c => c.Id == cardId);
 
@@ -66,7 +66,7 @@ namespace AduabaNeptune.Services
             {
 
                 card.CardNumber = Decrypt(card.CardNumber);
-                card.CCV = Decrypt(card.CCV);
+                card.CVV = Decrypt(card.CVV);
 
                 return card;
             }
@@ -87,10 +87,9 @@ namespace AduabaNeptune.Services
             {
                 CardHolderName = card.CardHolderName,
                 CardNumber = encryptedCardNumber,
-                CCV = Encrypt(card.CCV),
+                CVV = Encrypt(card.CCV),
                 ExpiryDate = card.ExpiryDate,
-                CustomerId = customerId,
-                Id = Guid.NewGuid().ToString()
+                CustomerId = customerId
             };
 
             await _context.Cards.AddAsync(creditCard);

@@ -32,7 +32,7 @@ namespace AduabaNeptune.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategoryById(string id)
+        public async Task<IActionResult> GetCategoryById(int id)
         {
 
             var category = await _categoryService.GetCategoryByIdAsync(id);
@@ -61,7 +61,7 @@ namespace AduabaNeptune.Controllers
 
         [Authorize]
         [HttpDelete]
-        public async Task<IActionResult> DeleteCategory([FromBody]List<string> categoryIds)
+        public async Task<IActionResult> DeleteCategory([FromBody]List<int> categoryIds)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);//Change to admin //Only using this to test
 

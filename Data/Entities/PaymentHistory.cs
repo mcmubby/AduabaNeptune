@@ -6,7 +6,7 @@ namespace AduabaNeptune.Data.Entities
     public class PaymentHistory
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
         
         public virtual Order Order { get; set; }
 

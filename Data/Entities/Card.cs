@@ -6,7 +6,7 @@ namespace AduabaNeptune.Data.Entities
     public class Card
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string CardHolderName { get; set; }
@@ -18,7 +18,7 @@ namespace AduabaNeptune.Data.Entities
         public DateTime ExpiryDate { get; set; }
 
         [Required]
-        public string CCV { get; set; }
+        public string CVV { get; set; }
 
         public virtual Customer Customer { get; set; }
 

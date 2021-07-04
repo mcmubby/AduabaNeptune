@@ -7,7 +7,7 @@ namespace AduabaNeptune.Data.Entities
     public class Product
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -32,6 +32,10 @@ namespace AduabaNeptune.Data.Entities
         public DateTime DateAdded { get; set; }
 
         public string ImageUrl { get; set; }
+
+        public bool Featured { get; set; }
+
+        public int ViewCount { get; set; }
 
 
         // public virtual IEnumerable<CartItem> CartItems { get; set; }

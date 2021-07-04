@@ -5,7 +5,7 @@ namespace AduabaNeptune.Data.Entities
     public class WishListItem
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public virtual Product Product { get; set; }
 

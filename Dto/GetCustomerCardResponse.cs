@@ -8,6 +8,6 @@ namespace AduabaNeptune.Dto
         public string CardNumber { get; set; }
         public DateTime ExpiryDate { get; set; }
         public string CCV { get; set; }
-        public string CardId { get; set; }
+        public int CardId { get; set; }
     }
 }

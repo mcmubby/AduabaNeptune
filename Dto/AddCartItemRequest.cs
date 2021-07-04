@@ -5,6 +5,6 @@ namespace AduabaNeptune.Dto
     public class AddCartItemRequest
     {
         [Required]
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
     }
 }

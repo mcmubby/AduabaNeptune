@@ -37,7 +37,7 @@ namespace AduabaNeptune.Controllers
 
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetProductById(string Id)
+        public async Task<IActionResult> GetProductById(int Id)
         {
             var product = await _productService.GetProductByIdAsync(Id);
 
@@ -47,7 +47,7 @@ namespace AduabaNeptune.Controllers
 
         [HttpGet]
         [Route("category")]
-        public async Task<IActionResult> GetProductsByCategory([FromQuery] Filter filter, [FromQuery]string categoryId)
+        public async Task<IActionResult> GetProductsByCategory([FromQuery] Filter filter, [FromQuery]int categoryId)
         {
             var route = Request.Path.Value;
 

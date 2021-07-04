@@ -8,9 +8,9 @@ namespace AduabaNeptune.Services
     public interface ICategoryService
     {
         Task<List<Category>> GetAllCategoriesAsync();
-        Task<Category> GetCategoryByIdAsync(string categoryId);
+        Task<Category> GetCategoryByIdAsync(int categoryId);
         Task<Category> AddCategoryAsync(AddCategoryRequest addCategoryRequest);
-        Task DeleteCategoryAsync(List<string> categoryIds);
+        Task DeleteCategoryAsync(List<int> categoryIds);
         Task<bool> EditCategoryAsync(EditCategoryRequest editCategoryRequest);
     }
 }

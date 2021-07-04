@@ -12,7 +12,11 @@ namespace AduabaNeptune.Data.Entities
         [Required]
         public string ShopName { get; set; }
 
-        public string VendorName { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
 
         [Required]
         public DateTime DateJoined { get; set; }
@@ -25,6 +29,8 @@ namespace AduabaNeptune.Data.Entities
 
         [Required]
         public string Password { get; set; }
+
+        public string ShopLogoUrl { get; set; }
 
         public string Role { get; set; } = "Vendor";
 

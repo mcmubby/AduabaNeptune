@@ -6,7 +6,7 @@ namespace AduabaNeptune.Data.Entities
     public class Category
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string CategoryName { get; set; }

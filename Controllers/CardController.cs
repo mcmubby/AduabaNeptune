@@ -47,7 +47,7 @@ namespace AduabaNeptune.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomerCardById(string id)
+        public async Task<IActionResult> GetCustomerCardById(int id)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
 
@@ -81,7 +81,7 @@ namespace AduabaNeptune.Controllers
 
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCard([FromBody]List<string> cardIds)
+        public async Task<IActionResult> DeleteCard([FromBody]List<int> cardIds)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
 

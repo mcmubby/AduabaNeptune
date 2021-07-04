@@ -31,7 +31,7 @@ namespace AduabaNeptune
                 {
                     OfficialEmail = adminEmail,
                     Password = adminPassword,
-                    Role = "admin",
+                    Role = "Admin",
                     FirstName = "Admin",
                     LastName = "Aduaba",
                     DateCreated = DateTime.UtcNow
@@ -59,9 +59,11 @@ namespace AduabaNeptune
                     Email = vendorEmail,
                     Password = vendorPassword,
                     ShopName = "Aduaba",
-                    VendorName = "Aduaba Admin",
+                    FirstName = "Aduaba",
+                    LastName = "Fresh",
                     DateJoined = DateTime.UtcNow,
-                    PhoneNumber = "+23412345678"
+                    PhoneNumber = "+23412345678",
+                    Role = "Vendor"
                 };
 
                 dbContext.Vendors.Add(vendor);

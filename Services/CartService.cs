@@ -19,7 +19,7 @@ namespace AduabaNeptune.Services
             _context = context;
         }
 
-        public async Task<CartItemResponse> AddItemToCartAsync(string productId, int customerId)
+        public async Task<CartItemResponse> AddItemToCartAsync(int productId, int customerId)
         {
             //Check product validity
             var productExist = await _context.Products.Where(p => p.Id == productId)
@@ -36,12 +36,10 @@ namespace AduabaNeptune.Services
             {
                 var cart = new Cart();
                 cart.CustomerId = customerId;
-                cart.Id = Guid.NewGuid().ToString();
                 _context.Carts.Add(cart);
 
                 var cartItem = new CartItem();
-                cartItem.Id = Guid.NewGuid().ToString();
-                cartItem.CartId =cart.Id;
+                cartItem.CartId = cart.Id; //Id might have not been assigned //error prone
                 cartItem.Quantity = 1;
                 cartItem.ProductId = productId;
                 cartItem.CartItemStatus = CartItemStatus.InCart.ToString();
@@ -64,7 +62,6 @@ namespace AduabaNeptune.Services
             if(sameItemAlreadyInCart is null)
             {
                 var cartItem = new CartItem();
-                cartItem.Id = Guid.NewGuid().ToString();
                 cartItem.CartId =existingCart.Id;
                 cartItem.Quantity = 1;
                 cartItem.ProductId = productId;
@@ -121,7 +118,7 @@ namespace AduabaNeptune.Services
             return response;
         }
 
-        public async Task RemoveItemFromCartAsync(string cartItemId)
+        public async Task RemoveItemFromCartAsync(int cartItemId)
         {
             var item = await _context.CartItems.Where(i => i.Id == cartItemId)
                                                .FirstOrDefaultAsync();
