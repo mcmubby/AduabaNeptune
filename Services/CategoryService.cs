@@ -52,7 +52,7 @@ namespace AduabaNeptune.Services
 
         public async Task<bool> EditCategoryAsync(EditCategoryRequest editCategoryRequest)
         {
-            var oldCategory = await _context.Categories.FirstOrDefaultAsync(c =>  c.Id == editCategoryRequest.Id);
+            var oldCategory = await GetCategoryByIdAsync(editCategoryRequest.Id);
 
             if(oldCategory == null){return false;} //Category not found
 

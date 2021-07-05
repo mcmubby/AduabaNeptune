@@ -4,14 +4,16 @@ using AduabaNeptune.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AduabaNeptune.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210628123444_Products")]
+    partial class Products
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,7 +92,7 @@ namespace AduabaNeptune.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -106,10 +108,8 @@ namespace AduabaNeptune.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CartId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CartItemStatus")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
@@ -118,6 +118,7 @@ namespace AduabaNeptune.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProductId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Quantity")
@@ -341,6 +342,7 @@ namespace AduabaNeptune.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CategoryId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateAdded")
@@ -366,7 +368,7 @@ namespace AduabaNeptune.Migrations
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VendorId")
+                    b.Property<int>("VendorId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -565,7 +567,9 @@ namespace AduabaNeptune.Migrations
                 {
                     b.HasOne("AduabaNeptune.Data.Entities.Customer", "Customer")
                         .WithMany("Cart")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
                 });
@@ -574,7 +578,9 @@ namespace AduabaNeptune.Migrations
                 {
                     b.HasOne("AduabaNeptune.Data.Entities.Cart", "Cart")
                         .WithMany("CartItems")
-                        .HasForeignKey("CartId");
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AduabaNeptune.Data.Entities.Customer", null)
                         .WithMany("CartItems")
@@ -586,7 +592,9 @@ namespace AduabaNeptune.Migrations
 
                     b.HasOne("AduabaNeptune.Data.Entities.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cart");
 
@@ -651,15 +659,19 @@ namespace AduabaNeptune.Migrations
                 {
                     b.HasOne("AduabaNeptune.Data.Entities.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AduabaNeptune.Data.Entities.SubCategory", null)
                         .WithMany("Product")
                         .HasForeignKey("SubCategoryId");
 
                     b.HasOne("AduabaNeptune.Data.Entities.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorId");
+                        .WithMany("Products")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
@@ -763,6 +775,11 @@ namespace AduabaNeptune.Migrations
             modelBuilder.Entity("AduabaNeptune.Data.Entities.SubCategory", b =>
                 {
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("AduabaNeptune.Data.Entities.Vendor", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishList", b =>
