@@ -12,5 +12,6 @@ namespace AduabaNeptune.Services
         Task<Vendor> AddVendor(Vendor vendor);
         Task<Vendor> UpdateVendor(Vendor vendor);
         void DeleteVendor(int vendorId);
+
     }
 }
