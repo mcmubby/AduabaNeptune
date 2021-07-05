@@ -1,3 +1,4 @@
+using System.Net.Mime;
 namespace AduabaNeptune.Helper
 {
     public enum CustomClaimType
@@ -5,6 +6,10 @@ namespace AduabaNeptune.Helper
         Id,
         Email,
         Firstname,
-        Lastname
+        Lastname,
+        ImageUrl,
+        PhoneNumber,
+        Role,
+        ShopName
     }
 }

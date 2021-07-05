@@ -7,7 +7,7 @@ namespace AduabaNeptune.Data.Entities
     public class Order
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string OrderNumber { get; set; }
@@ -27,11 +27,6 @@ namespace AduabaNeptune.Data.Entities
 
         
         public string ShippingAddressId { get; set; }
-
-        public virtual BillingAddress BillingAddress { get; set; }
-
-        
-        public string BillingAddressId { get; set; }
 
         public virtual Customer Customer { get; set; }
         

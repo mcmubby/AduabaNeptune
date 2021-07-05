@@ -46,16 +46,18 @@ namespace AduabaNeptune.Services
             return response;
         }
 
-        public async Task<GetProductResponse> GetProductByIdAsync(string productId)
+        public async Task<GetProductResponse> GetProductByIdAsync(int productId)
         {
             var product = await _context.Products.Where(p => p.Id == productId
                                                              && p.Quantity != 0).Include(v => v.Vendor)
                                                  .Include(c => c.Category)
                                                  .FirstOrDefaultAsync();
+
+            if(product is null){return null;}
             return product.AsProductResponseDto();
         }
 
-        public async Task<List<GetProductResponse>> GetProductsByCategoryAsync(string categoryId, Filter filter)//There might be an error here the cat Id selector in the linq
+        public async Task<List<GetProductResponse>> GetProductsByCategoryAsync(int categoryId, Filter filter)//There might be an error here the cat Id selector in the linq
         {
             var response = new List<GetProductResponse>();
             var products = await _context.Products.Where(p => p.Category.Id == categoryId

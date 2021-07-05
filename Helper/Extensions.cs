@@ -16,7 +16,7 @@ namespace AduabaNeptune.Helper
                 CardHolderName = card.CardHolderName,
                 CardNumber = card.CardNumber,
                 ExpiryDate = card.ExpiryDate,
-                CCV = card.CCV
+                CCV = card.CVV
             };
         }
 

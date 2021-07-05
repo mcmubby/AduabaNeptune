@@ -5,7 +5,7 @@ namespace AduabaNeptune.Dto
     public class EditProductQuantityRequest
     {
         [Required]
-        public string Id { get; set; }
+        public int Id { get; set; }
         [Required]
         public int Quantity { get; set; }
     }

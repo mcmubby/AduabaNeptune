@@ -45,6 +45,31 @@ namespace AduabaNeptune.Services
             }
         }
 
+        public async Task<bool> RegisterVendorAsync(RegistrationRequest model)
+        {
+            var alreadyRegistered = await _context.Vendors.AnyAsync(c => c.Email == model.Email);
+
+            if (alreadyRegistered)
+            {
+                return false;
+            }
+            else
+            {
+                var newVendor = new Vendor
+                {
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Password = BCryptNet.HashPassword(model.Password),
+                    DateJoined = DateTime.UtcNow
+                };
+
+                await _context.Vendors.AddAsync(newVendor);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+        }
+
         public async Task<string> SignInCustomerAsync(SignInRequest model)
         {
             var existingCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Email == model.Email);
@@ -55,7 +80,37 @@ namespace AduabaNeptune.Services
             }
             else
             {
-                var token = _tokenService.GenerateToken(existingCustomer);
+                var token = _tokenService.GenerateCustomerToken(existingCustomer);
+                return token;
+            }
+        }
+
+        public async Task<string> SignInEmployeeAsync(SignInRequest model)
+        {
+            var employee = await _context.Employees.FirstOrDefaultAsync(c => c.OfficialEmail == model.Email);
+
+            if (employee == null || !BCryptNet.Verify(model.Password, employee.Password))
+            {
+                return null;
+            }
+            else
+            {
+                var token = _tokenService.GenerateEmployeeToken(employee);
+                return token;
+            }
+        }
+
+        public async Task<string> SignInVendorAsync(SignInRequest model)
+        {
+            var existingVendor = await _context.Vendors.FirstOrDefaultAsync(c => c.Email == model.Email);
+
+            if (existingVendor == null || !BCryptNet.Verify(model.Password, existingVendor.Password))
+            {
+                return null;
+            }
+            else
+            {
+                var token = _tokenService.GenerateVendorToken(existingVendor);
                 return token;
             }
         }
@@ -80,9 +135,14 @@ namespace AduabaNeptune.Services
                 await _context.SaveChangesAsync();
 
                 //Generate new token
-                var token = _tokenService.GenerateToken(customer);
+                var token = _tokenService.GenerateCustomerToken(customer);
                 return token;
             }
+        }
+
+        public Task<string> UpdateVendorDetailAsync(UpdateCustomerRequest model, string vendorEmail)
+        {
+            throw new NotImplementedException();
         }
     }
 }
