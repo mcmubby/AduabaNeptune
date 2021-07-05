@@ -9,7 +9,7 @@ namespace AduabaNeptune.Services
     {
         Task<Card> SaveCreditCardAsync(SaveCardRequest card, int CustomerId);
         Task<List<Card>> GetAllCustomerCreditCardsAsync(int customerId);
-        Task DeleteCreditCardAsync(List<string> cardIds, int customerId);
-        Task<Card> GetCustomerCreditCardByIdAsync(string cardId);
+        Task DeleteCreditCardAsync(List<int> cardIds, int customerId);
+        Task<Card> GetCustomerCreditCardByIdAsync(int cardId);
     }
 }

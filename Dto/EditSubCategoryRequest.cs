@@ -9,6 +9,6 @@ namespace AduabaNeptune.Dto
         [Required]
         public string NewSubCategoryName { get; set; }
         [Required]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
     }
 }

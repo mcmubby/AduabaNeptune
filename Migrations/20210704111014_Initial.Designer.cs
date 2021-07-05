@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AduabaNeptune.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210623102427_Data type fix")]
-    partial class Datatypefix
+    [Migration("20210704111014_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,50 +21,16 @@ namespace AduabaNeptune.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("AduabaNeptune.Data.Entities.BillingAddress", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AlternatePhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactPersonsName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Landmark")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("BillingAddresses");
-                });
-
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Card", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CCV")
-                        .HasMaxLength(3)
-                        .HasColumnType("int");
+                    b.Property<string>("CVV")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CardHolderName")
                         .IsRequired()
@@ -89,8 +55,10 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Cart", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
@@ -104,22 +72,28 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.CartItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CartId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CartItemStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("OrderId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("OrderId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -130,7 +104,7 @@ namespace AduabaNeptune.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId1");
 
                     b.HasIndex("ProductId");
 
@@ -139,8 +113,10 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Category", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -183,18 +159,63 @@ namespace AduabaNeptune.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("AduabaNeptune.Data.Entities.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OfficialEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Employees");
+                });
+
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Order", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("BillingAddressId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
@@ -214,17 +235,18 @@ namespace AduabaNeptune.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddressId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ShippingAddressId1")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BillingAddressId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("OrderStatusId");
 
-                    b.HasIndex("ShippingAddressId");
+                    b.HasIndex("ShippingAddressId1");
 
                     b.ToTable("Orders");
                 });
@@ -247,8 +269,10 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.PaymentHistory", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
@@ -256,8 +280,8 @@ namespace AduabaNeptune.Migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("OrderId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
@@ -295,12 +319,13 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Product", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
@@ -308,6 +333,9 @@ namespace AduabaNeptune.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Featured")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
@@ -319,13 +347,16 @@ namespace AduabaNeptune.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("SubCategory")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VendorId")
+                    b.Property<int?>("VendorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ViewCount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -365,8 +396,10 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.ShippingAddress", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -406,9 +439,8 @@ namespace AduabaNeptune.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -435,12 +467,22 @@ namespace AduabaNeptune.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ShopName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VendorName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -450,8 +492,10 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
@@ -468,35 +512,32 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishListItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ProductId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("WishListId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("WishListId1")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId1");
 
-                    b.HasIndex("WishListId");
+                    b.HasIndex("WishListId1");
 
                     b.ToTable("WishListItems");
-                });
-
-            modelBuilder.Entity("AduabaNeptune.Data.Entities.BillingAddress", b =>
-                {
-                    b.HasOne("AduabaNeptune.Data.Entities.Customer", "Customer")
-                        .WithMany("BillingAddresses")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Card", b =>
@@ -535,10 +576,10 @@ namespace AduabaNeptune.Migrations
 
                     b.HasOne("AduabaNeptune.Data.Entities.Order", "Order")
                         .WithMany("CartItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId1");
 
                     b.HasOne("AduabaNeptune.Data.Entities.Product", "Product")
-                        .WithMany("CartItems")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -552,10 +593,6 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Order", b =>
                 {
-                    b.HasOne("AduabaNeptune.Data.Entities.BillingAddress", "BillingAddress")
-                        .WithMany("Orders")
-                        .HasForeignKey("BillingAddressId");
-
                     b.HasOne("AduabaNeptune.Data.Entities.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
@@ -570,9 +607,7 @@ namespace AduabaNeptune.Migrations
 
                     b.HasOne("AduabaNeptune.Data.Entities.ShippingAddress", "ShippingAddress")
                         .WithMany("Orders")
-                        .HasForeignKey("ShippingAddressId");
-
-                    b.Navigation("BillingAddress");
+                        .HasForeignKey("ShippingAddressId1");
 
                     b.Navigation("Customer");
 
@@ -606,19 +641,15 @@ namespace AduabaNeptune.Migrations
                 {
                     b.HasOne("AduabaNeptune.Data.Entities.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("AduabaNeptune.Data.Entities.SubCategory", null)
                         .WithMany("Product")
                         .HasForeignKey("SubCategoryId");
 
                     b.HasOne("AduabaNeptune.Data.Entities.Vendor", "Vendor")
-                        .WithMany("Products")
-                        .HasForeignKey("VendorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("VendorId");
 
                     b.Navigation("Category");
 
@@ -638,13 +669,11 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.SubCategory", b =>
                 {
-                    b.HasOne("AduabaNeptune.Data.Entities.Category", "Category")
+                    b.HasOne("AduabaNeptune.Data.Entities.Category", null)
                         .WithMany("SubCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishList", b =>
@@ -661,25 +690,16 @@ namespace AduabaNeptune.Migrations
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishListItem", b =>
                 {
                     b.HasOne("AduabaNeptune.Data.Entities.Product", "Product")
-                        .WithMany("WishListItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ProductId1");
 
                     b.HasOne("AduabaNeptune.Data.Entities.WishList", "WishList")
                         .WithMany("WishListItems")
-                        .HasForeignKey("WishListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WishListId1");
 
                     b.Navigation("Product");
 
                     b.Navigation("WishList");
-                });
-
-            modelBuilder.Entity("AduabaNeptune.Data.Entities.BillingAddress", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Cart", b =>
@@ -694,8 +714,6 @@ namespace AduabaNeptune.Migrations
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.Customer", b =>
                 {
-                    b.Navigation("BillingAddresses");
-
                     b.Navigation("Cards");
 
                     b.Navigation("Cart");
@@ -716,13 +734,6 @@ namespace AduabaNeptune.Migrations
                     b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("AduabaNeptune.Data.Entities.Product", b =>
-                {
-                    b.Navigation("CartItems");
-
-                    b.Navigation("WishListItems");
-                });
-
             modelBuilder.Entity("AduabaNeptune.Data.Entities.ShippingAddress", b =>
                 {
                     b.Navigation("Orders");
@@ -731,11 +742,6 @@ namespace AduabaNeptune.Migrations
             modelBuilder.Entity("AduabaNeptune.Data.Entities.SubCategory", b =>
                 {
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("AduabaNeptune.Data.Entities.Vendor", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("AduabaNeptune.Data.Entities.WishList", b =>

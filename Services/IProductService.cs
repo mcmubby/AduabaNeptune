@@ -8,8 +8,8 @@ namespace AduabaNeptune.Services
     public interface IProductService
     {
         Task<List<GetProductResponse>> GetAllProductsAsync(Filter filter);
-        Task<GetProductResponse> GetProductByIdAsync(string productId);
-        Task<List<GetProductResponse>> GetProductsByCategoryAsync(string categoryId, Filter filter);
+        Task<GetProductResponse> GetProductByIdAsync(int productId);
+        Task<List<GetProductResponse>> GetProductsByCategoryAsync(int categoryId, Filter filter);
         Task<List<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter);
         Task<bool> EditProductQuantityAsync(EditProductQuantityRequest editProductQuantity);
         Task<int> GetTotalRecords();

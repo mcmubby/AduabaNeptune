@@ -8,5 +8,9 @@ namespace AduabaNeptune.Services
         Task<bool> RegisterCustomerAsync(RegistrationRequest model);
         Task<string> SignInCustomerAsync(SignInRequest model);
         Task<string> UpdateCustomerDetailAsync(UpdateCustomerRequest model, string customerEmail);
+        Task<bool> RegisterVendorAsync(RegistrationRequest model);
+        Task<string> SignInVendorAsync(SignInRequest model);
+        Task<string> UpdateVendorDetailAsync(UpdateCustomerRequest model, string vendorEmail);
+        Task<string> SignInEmployeeAsync(SignInRequest model);
     }
 }

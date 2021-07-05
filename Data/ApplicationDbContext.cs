@@ -10,7 +10,6 @@ namespace AduabaNeptune.Data
             
         }
 
-        public DbSet<BillingAddress> BillingAddresses { get; set; }
         public DbSet<ShippingAddress> ShippingAddresses { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Cart> Carts { get; set; }

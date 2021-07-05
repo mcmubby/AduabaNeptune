@@ -19,7 +19,7 @@ namespace AduabaNeptune.Services
             _context = context;
         }
 
-        public async Task<CartItemResponse> AddItemToCartAsync(string productId, int customerId)
+        public async Task<CartItemResponse> AddItemToCartAsync(int productId, int customerId)
         {
             //Check product validity
             var productExist = await _context.Products.Where(p => p.Id == productId)
@@ -36,12 +36,10 @@ namespace AduabaNeptune.Services
             {
                 var cart = new Cart();
                 cart.CustomerId = customerId;
-                cart.Id = Guid.NewGuid().ToString();
                 _context.Carts.Add(cart);
 
                 var cartItem = new CartItem();
-                cartItem.Id = Guid.NewGuid().ToString();
-                cartItem.CartId =cart.Id;
+                cartItem.CartId = cart.Id; //Id might have not been assigned //error prone
                 cartItem.Quantity = 1;
                 cartItem.ProductId = productId;
                 cartItem.CartItemStatus = CartItemStatus.InCart.ToString();
@@ -64,7 +62,6 @@ namespace AduabaNeptune.Services
             if(sameItemAlreadyInCart is null)
             {
                 var cartItem = new CartItem();
-                cartItem.Id = Guid.NewGuid().ToString();
                 cartItem.CartId =existingCart.Id;
                 cartItem.Quantity = 1;
                 cartItem.ProductId = productId;
@@ -83,13 +80,15 @@ namespace AduabaNeptune.Services
         public async Task<CartItemResponse> EditItemQuantityAsync(EditCartItemRequest cartItemEdit)
         {
             //Find the cart item and change its quantity
-            var cartItem = await _context.CartItems.Where(c => c.Id == cartItemEdit.CartItemId).FirstOrDefaultAsync();
+            var cartItem = await _context.CartItems.Where(c => c.Id == cartItemEdit.CartItemId)
+                .Include(p => p.Product)
+                .FirstOrDefaultAsync();
 
             if(cartItem is null){return null;}
 
             var quantityAvailableAfterEdit = cartItem.Product.Quantity - cartItemEdit.Quantity;
 
-            if(quantityAvailableAfterEdit < 1){return null;}
+            if(quantityAvailableAfterEdit < 0){return null;}
 
             cartItem.Quantity = cartItemEdit.Quantity;
 
@@ -119,12 +118,13 @@ namespace AduabaNeptune.Services
             return response;
         }
 
-        public async Task RemoveItemFromCartAsync(string cartItemId)
+        public async Task RemoveItemFromCartAsync(int cartItemId)
         {
             var item = await _context.CartItems.Where(i => i.Id == cartItemId)
                                                .FirstOrDefaultAsync();
 
-            if(item != null){
+            if(item != null)
+            {
                 _context.CartItems.Remove(item);
                 await _context.SaveChangesAsync();
             }

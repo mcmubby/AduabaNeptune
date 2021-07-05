@@ -26,7 +26,6 @@ namespace AduabaNeptune.Services
 
             var newCategory = new Category
             {
-                Id = Guid.NewGuid().ToString(),
                 CategoryName = addCategoryRequest.CategoryName
             };
 
@@ -36,7 +35,7 @@ namespace AduabaNeptune.Services
         }
 
 
-        public async Task DeleteCategoryAsync(List<string> categoryIds)
+        public async Task DeleteCategoryAsync(List<int> categoryIds)
         {
             List<Category> categoriesToDelete = new List<Category>();
 
@@ -68,7 +67,7 @@ namespace AduabaNeptune.Services
             return response;
         }
 
-        public async Task<Category> GetCategoryByIdAsync(string categoryId)
+        public async Task<Category> GetCategoryByIdAsync(int categoryId)
         {
             return await _context.Categories.Where(c => c.Id == categoryId).FirstOrDefaultAsync();
         }

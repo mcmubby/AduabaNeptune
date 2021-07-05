@@ -18,6 +18,8 @@ namespace AduabaNeptune.Data.Entities
         [Required]
         public string LastName { get; set; }
 
+        public string PhoneNumber { get; set; }
+
         [Required]
         public DateTime DateCreated { get; set; }
         public DateTime LastModified { get; set; }
@@ -26,9 +28,10 @@ namespace AduabaNeptune.Data.Entities
         public string Password { get; set; }
         public string AvatarUrl { get; set; }
 
+        public string Role { get; set; } = "Customer";
 
 
-        public virtual IEnumerable<BillingAddress> BillingAddresses { get; set; }
+
         public virtual IEnumerable<ShippingAddress> ShippingAddresses { get; set; }
         public virtual IEnumerable<Card> Cards { get; set; }
         public virtual IEnumerable<Cart> Cart { get; set; }

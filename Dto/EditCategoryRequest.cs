@@ -5,7 +5,7 @@ namespace AduabaNeptune.Dto
     public class EditCategoryRequest
     {
         [Required]
-        public string Id { get; set; }
+        public int Id { get; set; }
         [Required]
         public string NewCategoryName { get; set; }
     }

@@ -12,7 +12,7 @@ namespace AduabaNeptune.Data.Entities
         public string Name { get; set; }
 
         [Required]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
 
         public virtual IEnumerable<Product> Product { get; set; }
