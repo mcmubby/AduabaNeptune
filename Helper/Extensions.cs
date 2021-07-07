@@ -30,6 +30,16 @@ namespace AduabaNeptune.Helper
             };
         }
 
+        public static RegistrationResponse AsRegistrationResponseDto(this Customer customer)
+        {
+            return new RegistrationResponse
+            {
+                Email = customer.Email,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName
+            };
+        }
+
 
         public static GetProductResponse AsProductResponseDto(this Product product)
         {
@@ -37,6 +47,7 @@ namespace AduabaNeptune.Helper
             {
                 ProductId = product.Id,
                 ProductName = product.Name,
+                ProductImage = product.ImageUrl,
                 ProductDescription = product.Description,
                 ProductPrice = product.Price,
                 Quantity = product.Quantity,
@@ -44,6 +55,8 @@ namespace AduabaNeptune.Helper
                 CategoryId = product.Category.Id,
                 ShopName = product.Vendor.ShopName,
                 ShopId = product.Vendor.Id,
+                Featured = product.Featured,
+                ViewCount = product.ViewCount,
                 DateAdded = product.DateAdded
             };
         }

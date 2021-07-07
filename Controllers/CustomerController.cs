@@ -23,13 +23,13 @@ namespace AduabaNeptune.Controllers
         {
             var response = await _accountService.RegisterCustomerAsync(model);
 
-            if (response == false)
+            if (response == null)
             {
                 return BadRequest(new {message = "Customer already exist"});
             }
             else
             {
-                return Ok(new {message = "Customer successfully registered"});
+                return CreatedAtAction(nameof(SignIn), response.AsRegistrationResponseDto());
             }
         }
 
@@ -45,7 +45,7 @@ namespace AduabaNeptune.Controllers
             }
             else
             {
-                return Ok(new {message = "Customer successfully signed-in", token = response});
+                return Ok(new {token = response});
             }
         }
 

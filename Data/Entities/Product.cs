@@ -33,9 +33,9 @@ namespace AduabaNeptune.Data.Entities
 
         public string ImageUrl { get; set; }
 
-        public bool Featured { get; set; }
+        public bool Featured { get; set; } = false;
 
-        public int ViewCount { get; set; }
+        public int ViewCount { get; set; } = 0;
 
 
         // public virtual IEnumerable<CartItem> CartItems { get; set; }
