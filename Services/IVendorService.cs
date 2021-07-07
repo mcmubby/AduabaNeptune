@@ -5,7 +5,7 @@ using AduabaNeptune.Dto;
 
 namespace AduabaNeptune.Services
 {
-    public interface IVendorServices
+    public interface IVendorService
     {
         Task<IEnumerable<Vendor>> GetVendors();
         Task<Vendor> GetVendorById(int vendorId);

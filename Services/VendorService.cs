@@ -49,7 +49,7 @@ namespace AduabaNeptune.Services
 
         public async void DeleteVendor(int vendorId)
         {
-            var result = await _context.Vendors.FirstOrDefaultAsync(v => v.VendorId == vendorI);
+            var result = await _context.Vendors.FirstOrDefaultAsync(v => v.VendorId == vendorId);
             if (result ! = null)
             {
                 _context.Vendors.Remove(result);

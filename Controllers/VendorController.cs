@@ -25,7 +25,7 @@ namespace AduabaNeptune.Controllers
         {
             try
             {
-                return Ok(await vendorService.GetVendors()).ToList();
+                return Ok(await _vendorService.GetVendors()).ToList();
             }
             catch (Exception)
             {
@@ -37,7 +37,7 @@ namespace AduabaNeptune.Controllers
         {
             try
             {
-                var result = await vendorService.GetVendorById(id);
+                var result = await _vendorService.GetVendorById(id);
                 if (result == null) return NotFound();
                 return result;
             }
@@ -71,7 +71,7 @@ namespace AduabaNeptune.Controllers
                 var vendorToUpdate = await _vendorService.GetVendor(id);
                 if (vendorToUpdate == null)
                     return NotFound($"Vendor with Id = {id} not found");
-                return await _vendorService.UpdateVendor(employee);
+                return await _vendorService.UpdateVendor(vendor);
             }
             catch (Exception)
             {
