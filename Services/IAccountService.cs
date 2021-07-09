@@ -13,5 +13,8 @@ namespace AduabaNeptune.Services
         Task<string> SignInVendorAsync(SignInRequest model);
         Task<string> UpdateVendorDetailAsync(UpdateCustomerRequest model, string vendorEmail);
         Task<string> SignInEmployeeAsync(SignInRequest model);
+        Task<Customer> GetCustomerByEmail(string emailAddress);
+        Task<bool> VerifyResetPinAsync(int pin, string emailAddress);
+        Task<bool> UpdateCustomerPassword(string email, string newPassword);
     }
 }

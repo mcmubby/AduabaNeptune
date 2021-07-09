@@ -49,6 +49,7 @@ namespace AduabaNeptune.Helper
                 ProductName = product.Name,
                 ProductImage = product.ImageUrl,
                 ProductDescription = product.Description,
+                ShortDescription = product.Description.Substring(0,80) + "...",
                 ProductPrice = product.Price,
                 Quantity = product.Quantity,
                 CategoryName = product.Category.CategoryName,
@@ -57,7 +58,8 @@ namespace AduabaNeptune.Helper
                 ShopId = product.Vendor.Id,
                 Featured = product.Featured,
                 ViewCount = product.ViewCount,
-                DateAdded = product.DateAdded
+                DateAdded = product.DateAdded,
+                InStock = true
             };
         }
 

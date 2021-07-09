@@ -5,6 +5,7 @@ using AduabaNeptune.Data.Entities;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace AduabaNeptune.Services
 {
@@ -17,6 +18,15 @@ namespace AduabaNeptune.Services
         {
             _context = context;
             _tokenService = tokenService;
+        }
+
+        public async Task<Customer> GetCustomerByEmail(string emailAddress)
+        {
+            var existingCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Email == emailAddress);
+
+            if(existingCustomer == null){return null;}
+
+            return existingCustomer;
         }
 
         public async Task<Customer> RegisterCustomerAsync(RegistrationRequest model)
@@ -37,7 +47,7 @@ namespace AduabaNeptune.Services
                     LastName = model.LastName,
                     Password = BCryptNet.HashPassword(model.Password),
                     DateCreated = DateTime.UtcNow,
-                    PhoneNumber = "unavailable",
+                    PhoneNumber = model.PhoneNumber,
                     AvatarUrl = "avatar"
                 };
 
@@ -142,9 +152,43 @@ namespace AduabaNeptune.Services
             }
         }
 
+        public async Task<bool> UpdateCustomerPassword(string email, string newPassword)
+        {
+            var customer = await _context.Customers.Where(c => c.Email == email).FirstOrDefaultAsync();
+
+            if(customer == null){return false;}
+
+            customer.Password = BCryptNet.HashPassword(newPassword);
+            customer.LastModified = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public Task<string> UpdateVendorDetailAsync(UpdateCustomerRequest model, string vendorEmail)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> VerifyResetPinAsync(int pin, string emailAddress)
+        {
+            var customer = await GetCustomerByEmail(emailAddress);
+
+            if(customer == null){return false;}
+
+            var savedPin = await _context.ResetPins.Where(p => p.CustomerId == customer.Id).FirstOrDefaultAsync();
+
+            if(savedPin  == null){return false;}
+
+            if(savedPin.Pin == pin)
+            {
+                _context.ResetPins.Remove(savedPin);
+                _context.SaveChanges();
+                return true;
+            }
+            
+            return false;
+
         }
     }
 }

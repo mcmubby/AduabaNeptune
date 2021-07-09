@@ -78,6 +78,7 @@ namespace AduabaNeptune
             services.AddScoped<ISubCategoryService, SubCategoryService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IMessageSenderService, MessageSenderService>();
 
 
             services.AddSingleton<IUriService>(o =>
