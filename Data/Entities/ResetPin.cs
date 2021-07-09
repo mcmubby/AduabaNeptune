@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace AduabaNeptune.Data.Entities
@@ -9,5 +10,6 @@ namespace AduabaNeptune.Data.Entities
         public int Pin { get; set; }
         public virtual Customer Customer { get; set; }
         public int CustomerId { get; set; }
+        public DateTime ExpiresAt { get; set; }
     }
 }

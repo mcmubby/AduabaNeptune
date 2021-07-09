@@ -35,21 +35,22 @@ namespace AduabaNeptune.Services
         {
             var random = new Random();
             int pin = random.Next(1000, 9999);
-            string content = $"<p>Your password reset pin is : </p>" + pin.ToString();
+            string content = "<p>Your password reset pin is : </p>" + pin.ToString();
 
             var subject = "Security Code";
 
             var apiKey = _configuration["SendGridAPIKey"];
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("noreply.accountservice@aduabafresh.com", "ADUABA Customer Service");
+            var from = new EmailAddress("ekeneanolue@outlook.com","ADUABA Customer Service");
             var to = new EmailAddress(emailAddress);
             var msg = MailHelper.CreateSingleEmail(from, to, subject, pin.ToString(), content);
 
-            await client.SendEmailAsync(msg).ConfigureAwait(false);
+            var response = await client.SendEmailAsync(msg);
 
             var resetPin = new ResetPin{
                 CustomerId = customerId,
-                Pin = pin
+                Pin = pin,
+                ExpiresAt = DateTime.Now.AddMinutes(20)
             };
 
             await _context.ResetPins.AddAsync(resetPin);
@@ -75,7 +76,8 @@ namespace AduabaNeptune.Services
             //Save pin to db on reset table
             var resetPin = new ResetPin{
                 CustomerId = customerId,
-                Pin = pin
+                Pin = pin,
+                ExpiresAt = DateTime.Now.AddMinutes(20)
             };
 
             await _context.ResetPins.AddAsync(resetPin);

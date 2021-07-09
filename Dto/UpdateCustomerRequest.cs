@@ -12,6 +12,6 @@ namespace AduabaNeptune.Dto
 
         [Required]
         public string LastName { get; set; }
-        public string AvatarUrl { get; set; }
+        public string Base64Image { get; set; }
     }
 }

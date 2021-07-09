@@ -176,7 +176,7 @@ namespace AduabaNeptune.Services
 
             if(customer == null){return false;}
 
-            var savedPin = await _context.ResetPins.Where(p => p.CustomerId == customer.Id).FirstOrDefaultAsync();
+            var savedPin = await _context.ResetPins.Where(p => p.CustomerId == customer.Id && DateTime.Now < p.ExpiresAt).FirstOrDefaultAsync();
 
             if(savedPin  == null){return false;}
 
