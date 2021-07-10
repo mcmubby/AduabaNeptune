@@ -13,11 +13,13 @@ namespace AduabaNeptune.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly ITokenService _tokenService;
+        private readonly IImageService _imageService;
 
-        public AccountService(ApplicationDbContext context, ITokenService tokenService)
+        public AccountService(ApplicationDbContext context, ITokenService tokenService, IImageService imageService)
         {
             _context = context;
             _tokenService = tokenService;
+            _imageService = imageService;
         }
 
         public async Task<Customer> GetCustomerByEmail(string emailAddress)
@@ -138,7 +140,12 @@ namespace AduabaNeptune.Services
             }
             else
             {
-                customer.Email = model.Email;
+                if(!string.IsNullOrEmpty(model.Base64ImageString))
+                {
+                    var upload = await _imageService.UploadCustomerAvatar(model.Base64ImageString);
+                    if(!string.IsNullOrEmpty(upload)){customer.AvatarUrl = upload;}
+                }
+                customer.PhoneNumber = model.PhoneNumber;
                 customer.FirstName = model.FirstName;
                 customer.LastName = model.LastName;
                 customer.LastModified = DateTime.UtcNow;

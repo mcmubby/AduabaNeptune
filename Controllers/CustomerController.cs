@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using AduabaNeptune.Dto;
 using AduabaNeptune.Helper;
@@ -93,7 +94,7 @@ namespace AduabaNeptune.Controllers
 
             if (response == null)
             {
-                return BadRequest(new {message = "Invalid Email or Password"});
+                return BadRequest(new {message = "Credentials doesn't exist"});
             }
             else
             {
@@ -103,7 +104,7 @@ namespace AduabaNeptune.Controllers
 
 
         [Authorize]
-        [HttpPut("update-customer-details")]
+        [HttpPatch("update-customer-details")]
         public async Task<IActionResult> UpdateDetails(UpdateCustomerRequest model)
         {
 

@@ -41,6 +41,22 @@ namespace AduabaNeptune.Helper
         }
 
 
+        public static ShippingAddressResponse AsShippingAddressResponseDto(this ShippingAddress shippingAddress)
+        {
+            return new ShippingAddressResponse
+            {
+                ShippingAddressId = shippingAddress.Id,
+                ContactPersonsName = shippingAddress.ContactPersonsName,
+                Address = shippingAddress.Address,
+                City = shippingAddress.City,
+                PhoneNumber = shippingAddress.PhoneNumber,
+                AlternatePhoneNumber = shippingAddress.AlternatePhoneNumber,
+                Landmark = shippingAddress.Landmark,
+                CustomerId = shippingAddress.CustomerId
+            };
+        }
+
+
         public static GetProductResponse AsProductResponseDto(this Product product)
         {
             return new GetProductResponse
