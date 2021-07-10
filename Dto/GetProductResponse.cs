@@ -17,5 +17,7 @@ namespace AduabaNeptune.Dto
         public string ProductImage { get; set; }
         public bool Featured { get; set; }
         public int ViewCount { get; set; }
+        public bool InStock { get; set; }
+        public string ShortDescription { get; set; }
     }
 }

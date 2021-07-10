@@ -5,6 +5,7 @@ using AduabaNeptune.Data.Entities;
 using BCryptNet = BCrypt.Net.BCrypt;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace AduabaNeptune.Services
 {
@@ -12,11 +13,22 @@ namespace AduabaNeptune.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly ITokenService _tokenService;
+        private readonly IImageService _imageService;
 
-        public AccountService(ApplicationDbContext context, ITokenService tokenService)
+        public AccountService(ApplicationDbContext context, ITokenService tokenService, IImageService imageService)
         {
             _context = context;
             _tokenService = tokenService;
+            _imageService = imageService;
+        }
+
+        public async Task<Customer> GetCustomerByEmail(string emailAddress)
+        {
+            var existingCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Email == emailAddress);
+
+            if(existingCustomer == null){return null;}
+
+            return existingCustomer;
         }
 
         public async Task<Customer> RegisterCustomerAsync(RegistrationRequest model)
@@ -37,7 +49,7 @@ namespace AduabaNeptune.Services
                     LastName = model.LastName,
                     Password = BCryptNet.HashPassword(model.Password),
                     DateCreated = DateTime.UtcNow,
-                    PhoneNumber = "unavailable",
+                    PhoneNumber = model.PhoneNumber,
                     AvatarUrl = "avatar"
                 };
 
@@ -128,7 +140,12 @@ namespace AduabaNeptune.Services
             }
             else
             {
-                customer.Email = model.Email;
+                if(!string.IsNullOrEmpty(model.Base64ImageString))
+                {
+                    var upload = await _imageService.UploadCustomerAvatar(model.Base64ImageString);
+                    if(!string.IsNullOrEmpty(upload)){customer.AvatarUrl = upload;}
+                }
+                customer.PhoneNumber = model.PhoneNumber;
                 customer.FirstName = model.FirstName;
                 customer.LastName = model.LastName;
                 customer.LastModified = DateTime.UtcNow;
@@ -142,9 +159,43 @@ namespace AduabaNeptune.Services
             }
         }
 
+        public async Task<bool> UpdateCustomerPassword(string email, string newPassword)
+        {
+            var customer = await _context.Customers.Where(c => c.Email == email).FirstOrDefaultAsync();
+
+            if(customer == null){return false;}
+
+            customer.Password = BCryptNet.HashPassword(newPassword);
+            customer.LastModified = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public Task<string> UpdateVendorDetailAsync(UpdateCustomerRequest model, string vendorEmail)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> VerifyResetPinAsync(int pin, string emailAddress)
+        {
+            var customer = await GetCustomerByEmail(emailAddress);
+
+            if(customer == null){return false;}
+
+            var savedPin = await _context.ResetPins.Where(p => p.CustomerId == customer.Id && DateTime.Now < p.ExpiresAt).FirstOrDefaultAsync();
+
+            if(savedPin  == null){return false;}
+
+            if(savedPin.Pin == pin)
+            {
+                _context.ResetPins.Remove(savedPin);
+                _context.SaveChanges();
+                return true;
+            }
+            
+            return false;
+
         }
     }
 }
