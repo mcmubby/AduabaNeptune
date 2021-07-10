@@ -30,15 +30,30 @@ namespace AduabaNeptune.Services
             return true;
         }
 
-        public async Task<List<GetProductResponse>> GetAllProductsAsync(Filter filter)
+//Paginated method
+        // public async Task<List<GetProductResponse>> GetAllProductsAsync(Filter filter)
+        // {
+        //     var response = new List<GetProductResponse>();
+        //     var products = await _context.Products.Where(p => p.Quantity != 0).Include(v => v.Vendor)
+        //                                           .Include(c => c.Category)
+        //                                           .OrderBy(p => p.DateAdded)
+        //                                           .Skip((filter.PageNumber - 1) * filter.PageSize)
+        //                                           .Take(filter.PageSize)
+        //                                               .ToListAsync();
+        //     foreach (var product in products)
+        //     {
+        //         response.Add(product.AsProductResponseDto());                
+        //     }
+        //     return response;
+        // }
+
+
+        public async Task<List<GetProductResponse>> GetAllProductsAsync()
         {
             var response = new List<GetProductResponse>();
             var products = await _context.Products.Where(p => p.Quantity != 0).Include(v => v.Vendor)
                                                   .Include(c => c.Category)
-                                                  .OrderBy(p => p.DateAdded)
-                                                  .Skip((filter.PageNumber - 1) * filter.PageSize)
-                                                  .Take(filter.PageSize)
-                                                      .ToListAsync();
+                                                  .ToListAsync();
             foreach (var product in products)
             {
                 response.Add(product.AsProductResponseDto());                
@@ -57,15 +72,29 @@ namespace AduabaNeptune.Services
             return product.AsProductResponseDto();
         }
 
-        public async Task<List<GetProductResponse>> GetProductsByCategoryAsync(int categoryId, Filter filter)//There might be an error here the cat Id selector in the linq
+        // public async Task<List<GetProductResponse>> GetProductsByCategoryAsync(int categoryId, Filter filter)//There might be an error here the cat Id selector in the linq
+        // {
+        //     var response = new List<GetProductResponse>();
+        //     var products = await _context.Products.Where(p => p.Category.Id == categoryId
+        //                                                       && p.Quantity != 0).Include(v => v.Vendor)
+        //                                           .Include(c => c.Category)
+        //                                           .OrderBy(p => p.DateAdded)
+        //                                           .Skip((filter.PageNumber - 1) * filter.PageSize)
+        //                                           .Take(filter.PageSize)
+        //                                           .ToListAsync();
+        //     foreach (var product in products)
+        //     {
+        //         response.Add(product.AsProductResponseDto());                
+        //     }
+        //     return response;
+        // }
+
+        public async Task<List<GetProductResponse>> GetProductsByCategoryAsync(int categoryId)//There might be an error here the cat Id selector in the linq
         {
             var response = new List<GetProductResponse>();
             var products = await _context.Products.Where(p => p.Category.Id == categoryId
                                                               && p.Quantity != 0).Include(v => v.Vendor)
                                                   .Include(c => c.Category)
-                                                  .OrderBy(p => p.DateAdded)
-                                                  .Skip((filter.PageNumber - 1) * filter.PageSize)
-                                                  .Take(filter.PageSize)
                                                   .ToListAsync();
             foreach (var product in products)
             {
@@ -74,16 +103,14 @@ namespace AduabaNeptune.Services
             return response;
         }
 
-        public async Task<List<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter)
+
+        public async Task<List<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord)
         {
             var response = new List<GetProductResponse>();
             var products = await _context.Products.Where(p => p.Description.Contains(searchKeyWord)
                                                               || p.Name.Contains(searchKeyWord)
                                                               && p.Quantity != 0).Include(v => v.Vendor)
                                                   .Include(c => c.Category)
-                                                  .OrderBy(p => p.DateAdded)
-                                                  .Skip((filter.PageNumber - 1) * filter.PageSize)
-                                                  .Take(filter.PageSize)
                                                   .ToListAsync();
             foreach (var product in products)
             {
@@ -91,6 +118,25 @@ namespace AduabaNeptune.Services
             }
             return response;
         }
+
+
+        // public async Task<List<GetProductResponse>> GetProductsBySearchKeyAsync(string searchKeyWord, Filter filter)
+        // {
+        //     var response = new List<GetProductResponse>();
+        //     var products = await _context.Products.Where(p => p.Description.Contains(searchKeyWord)
+        //                                                       || p.Name.Contains(searchKeyWord)
+        //                                                       && p.Quantity != 0).Include(v => v.Vendor)
+        //                                           .Include(c => c.Category)
+        //                                           .OrderBy(p => p.DateAdded)
+        //                                           .Skip((filter.PageNumber - 1) * filter.PageSize)
+        //                                           .Take(filter.PageSize)
+        //                                           .ToListAsync();
+        //     foreach (var product in products)
+        //     {
+        //         response.Add(product.AsProductResponseDto());                
+        //     }
+        //     return response;
+        // }
 
         public async Task<int> GetTotalRecords()
         {

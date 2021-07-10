@@ -19,14 +19,14 @@ namespace AduabaNeptune.Services
             _tokenService = tokenService;
         }
 
-        public async Task<bool> RegisterCustomerAsync(RegistrationRequest model)
+        public async Task<Customer> RegisterCustomerAsync(RegistrationRequest model)
         {
             //Check if the email is already registered
             var alreadyRegistered = await _context.Customers.AnyAsync(c => c.Email == model.Email);
 
             if (alreadyRegistered)
             {
-                return false;
+                return null;
             }
             else
             {
@@ -36,12 +36,14 @@ namespace AduabaNeptune.Services
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Password = BCryptNet.HashPassword(model.Password),
-                    DateCreated = DateTime.UtcNow
+                    DateCreated = DateTime.UtcNow,
+                    PhoneNumber = "unavailable",
+                    AvatarUrl = "avatar"
                 };
 
                 await _context.Customers.AddAsync(newCustomer);
                 await _context.SaveChangesAsync();
-                return true;
+                return newCustomer;
             }
         }
 

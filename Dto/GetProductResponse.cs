@@ -14,5 +14,8 @@ namespace AduabaNeptune.Dto
         public string ShopName { get; set; }
         public int ShopId { get; set; }
         public DateTime DateAdded { get; set; }
+        public string ProductImage { get; set; }
+        public bool Featured { get; set; }
+        public int ViewCount { get; set; }
     }
 }
