@@ -34,9 +34,12 @@ namespace AduabaNeptune.Services
 
             if(existingCart is null)
             {
-                var cart = new Cart();
-                cart.CustomerId = customerId;
+                var cart = new Cart
+                {
+                    CustomerId = customerId
+                };
                 _context.Carts.Add(cart);
+                _context.SaveChanges();
 
                 var cartItem = new CartItem();
                 cartItem.CartId = cart.Id; //Id might have not been assigned //error prone
@@ -118,14 +121,23 @@ namespace AduabaNeptune.Services
             return response;
         }
 
-        public async Task RemoveItemFromCartAsync(int cartItemId)
+        public async Task RemoveItemFromCartAsync(List<int> cartItemId)
         {
-            var item = await _context.CartItems.Where(i => i.Id == cartItemId)
-                                               .FirstOrDefaultAsync();
+            // var item = await _context.CartItems.Where(i => i.Id == cartItemId)
+            //                                    .FirstOrDefaultAsync();
 
-            if(item != null)
+            // if(item != null)
+            // {
+            //     _context.CartItems.Remove(item);
+            //     await _context.SaveChangesAsync();
+            // }
+
+            List<CartItem> cartItemsToDelete = new List<CartItem>();
+            cartItemsToDelete = await _context.CartItems.Where(c => cartItemId.Contains(c.Id)).ToListAsync();
+
+            if (cartItemsToDelete.Count != 0)
             {
-                _context.CartItems.Remove(item);
+                _context.CartItems.RemoveRange(cartItemsToDelete);
                 await _context.SaveChangesAsync();
             }
         }
