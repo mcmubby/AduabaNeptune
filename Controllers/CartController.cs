@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AduabaNeptune.Dto;
 using AduabaNeptune.Helper;
@@ -70,8 +71,8 @@ namespace AduabaNeptune.Controllers
         }
 
 
-        [HttpDelete("{cartItemId}")]
-        public async Task<IActionResult> DeleteItemFromCart(int cartItemId)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteItemFromCart([FromBody]List<int> cartItemId)
         {
             var requesterIdentity = ClaimsProcessor.CheckClaimForCustomerId(HttpContext.User);
 
